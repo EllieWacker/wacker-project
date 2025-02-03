@@ -23,11 +23,11 @@
 
     <context-param>
         <param-name>appURLLocal</param-name>
-        <param-value>http://localhost:8080/wacker_project_war_exploded</param-value>
+        <param-value>http://localhost:8080/toy_store_war_exploded</param-value>
     </context-param>
     <context-param>
         <param-name>appURLCloud</param-name>
-        <param-value>https://wacker.azurewebsites.net</param-value>
+        <param-value>https://mlhaus.azurewebsites.net</param-value>
     </context-param>
     <context-param>
         <param-name>debugging</param-name>
@@ -43,4 +43,19 @@
         <location>/errorHandler</location>
     </error-page>
 
+
 </web-app>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
