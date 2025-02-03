@@ -28,7 +28,6 @@ public class UserDAO {
                 String lastName = rs.getString("last_name");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
-                char[] password = rs.getString("password").toCharArray();
                 String language = rs.getString("language");
                 String status = rs.getString("status");
                 String privileges = rs.getString("privileges");
@@ -37,7 +36,7 @@ public class UserDAO {
                 Instant dateOfBirth = rs.getTimestamp("date_of_birth").toInstant();
                 String interests = rs.getString("interests");
 
-                User user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, createdAt, timezone, dateOfBirth, interests);
+                User user = new User(userId, firstName, lastName, email, phone, language, status, privileges, createdAt, timezone, dateOfBirth, interests);
                 list.add(user);
 
 

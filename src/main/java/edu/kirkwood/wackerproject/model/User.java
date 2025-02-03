@@ -10,7 +10,6 @@ public class User implements Comparable<User> {
     private String lastName;
     private String email;
     private String phone;
-    private char[] password;
     private String language;
     private String status;
     private String privileges;
@@ -22,13 +21,12 @@ public class User implements Comparable<User> {
     public User() {
     }
 
-    public User(int userId, String firstName, String lastName, String email, String phone, char[] password, String language, String status, String privileges, Instant createdAt, String timezone, Instant dateOfBirth, String interests) {
+    public User(int userId, String firstName, String lastName, String email, String phone, String language, String status, String privileges, Instant createdAt, String timezone, Instant dateOfBirth, String interests) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
-        this.password = password;
         this.language = language;
         this.status = status;
         this.privileges = privileges;
@@ -76,14 +74,6 @@ public class User implements Comparable<User> {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public char[] getPassword() {
-        return password;
-    }
-
-    public void setPassword(char[] password) {
-        this.password = password;
     }
 
     public String getLanguage() {
