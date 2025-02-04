@@ -1,5 +1,6 @@
 package edu.kirkwood.wackerproject.controller;
 
+import edu.kirkwood.shared.email.EmailThread;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,6 +22,28 @@ public class ErrorHandler extends HttpServlet {
         errorMsg += "<strong>Request URI:</strong> " + req.getAttribute(ERROR_REQUEST_URI) + "<br>";
         req.setAttribute("errorMsg", errorMsg);
         req.setAttribute("pageTitle", "Error");
+
+        String requestedUrl = req.getRequestURL().toString();
+        String servletPath = req.getServletPath();
+        String subject = "An error occurred";
+        String bodyHTML = "<p><strong>" + errorMsg + "</strong></p>";
+        bodyHTML += "<p>The following URL could not be found:</p>";
+        bodyHTML += "<p><strong>" + requestedUrl + "</strong></p>";
+        bodyHTML += "<p><strong>Servlet Name:</strong> " + servletPath + "</p>";
+
+        String adminEmail = System.getenv("ADMIN_EMAIL");
+
+        try {
+            EmailThread emailThread = new EmailThread(adminEmail, subject, bodyHTML, "no-reply@yourdomain.com");
+            emailThread.start();
+            emailThread.join();
+        } catch (InterruptedException e) {
+            // Handle email sending failure (optional logging)
+            e.printStackTrace();
+        }
+
+
+
         req.getRequestDispatcher("WEB-INF/error.jsp").forward(req, resp);
     }
 }

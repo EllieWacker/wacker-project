@@ -1,6 +1,8 @@
 package edu.kirkwood.wackerproject.controller;
 
 
+import edu.kirkwood.shared.email.EmailThread;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
