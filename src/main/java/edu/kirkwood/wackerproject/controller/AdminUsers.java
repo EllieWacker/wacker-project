@@ -18,6 +18,8 @@ public class AdminUsers extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> users = UserDAO.getAll();
         req.setAttribute("users", users);
+        String query = req.getParameter("q");
+        query.toString();
         req.setAttribute("pageTitle", "All Users");
         req.getRequestDispatcher("WEB-INF/admin-users.jsp").forward(req, resp);
     }
