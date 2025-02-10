@@ -1,3 +1,5 @@
 
 </body>
 </html>
+
+<%@include file="/WEB-INF/bottom-nav.jspf"%>

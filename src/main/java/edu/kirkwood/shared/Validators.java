@@ -4,6 +4,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validators {
+
+    public static boolean isStrongPassword(String password) {
+        // Password requires 8 characters with at least 3 out 4 (uppercase letter, lowercase letter, number, special character ~`!@#$%^&*()_-+={}[]|\:;"'<>,.?/
+        Pattern pattern = Pattern.compile("^(?:(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))(?!.*(.)\\1{2,})[A-Za-z0-9~`!\\@#\\$%\\^&*()_\\-+={}\\[\\]\\|\\\\:;\"'<>,.?\\/]{8,128}$");
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
     public static boolean isANumber(String str) {
         try {
             Double.parseDouble(str);

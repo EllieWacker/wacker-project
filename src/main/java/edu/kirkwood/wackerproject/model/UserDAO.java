@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import edu.kirkwood.wackerproject.model.User;
 
 import static edu.kirkwood.shared.MySQL_Connect.getConnection;
 
 public class UserDAO {
     public static void main(String[] args) {
         getAll().forEach(System.out::println);
+        System.out.println(get("delete-me2@example.com"));
     }
     public static List<User> getAll() {
 
@@ -28,6 +28,7 @@ public class UserDAO {
                 String lastName = rs.getString("last_name");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
+                char[] password = rs.getString("password").toCharArray();
                 String language = rs.getString("language");
                 String status = rs.getString("status");
                 String privileges = rs.getString("privileges");
@@ -36,7 +37,7 @@ public class UserDAO {
                 Instant dateOfBirth = rs.getTimestamp("date_of_birth").toInstant();
                 String interests = rs.getString("interests");
 
-                User user = new User(userId, firstName, lastName, email, phone, language, status, privileges, createdAt, timezone, dateOfBirth, interests);
+                User user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, createdAt, timezone, dateOfBirth, interests);
                 list.add(user);
 
 
@@ -45,5 +46,36 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+    public static User get(String email) {
+        User user = null;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_get_user(?)}")) {
+                    statement.setString(1, email);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            int userId = resultSet.getInt("user_id");
+                            String firstName = resultSet.getString("first_name");
+                            String lastName = resultSet.getString("last_name");
+                            String phone = resultSet.getString("phone");
+                            char[] password = resultSet.getString("password").toCharArray();
+                            String language = resultSet.getString("language");
+                            String status = resultSet.getString("status");
+                            String privileges = resultSet.getString("privileges");
+                            Instant created_at = resultSet.getTimestamp("created_at").toInstant();
+                            String timezone = resultSet.getString("timezone");
+                            Instant dateOfBirth = resultSet.getTimestamp("date_of_birth").toInstant();
+                            String interests = resultSet.getString("interests");
+                            user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, created_at, timezone, dateOfBirth, interests);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
     }
 }

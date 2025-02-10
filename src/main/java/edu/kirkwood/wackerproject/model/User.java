@@ -1,5 +1,7 @@
 package edu.kirkwood.wackerproject.model;
 
+import edu.kirkwood.shared.Validators;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
@@ -10,6 +12,7 @@ public class User implements Comparable<User> {
     private String lastName;
     private String email;
     private String phone;
+    private char[] password;
     private String language;
     private String status;
     private String privileges;
@@ -21,12 +24,13 @@ public class User implements Comparable<User> {
     public User() {
     }
 
-    public User(int userId, String firstName, String lastName, String email, String phone, String language, String status, String privileges, Instant createdAt, String timezone, Instant dateOfBirth, String interests) {
+    public User(int userId, String firstName, String lastName, String email, String phone, char[] password, String language, String status, String privileges, Instant createdAt, String timezone, Instant dateOfBirth, String interests) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+        this.password = password;
         this.language = language;
         this.status = status;
         this.privileges = privileges;
@@ -65,7 +69,12 @@ public class User implements Comparable<User> {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if(!Validators.isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email address");
+        }
+        else{
+            this.email = email;
+        }
     }
 
     public String getPhone() {
@@ -74,6 +83,20 @@ public class User implements Comparable<User> {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public char[] getPassword() {
+        return password;
+    }
+
+    public void setPassword(char[] password) {
+        if(password != null) {
+            String passwordString = String.valueOf(password);
+            if(!Validators.isStrongPassword(passwordString)) {
+                throw new IllegalArgumentException("Password requires at least 8 characters, and at least 3 of 4: lowercase leter, uppercase letter, number, symbol");
+            }
+        }
+        this.password = password;
     }
 
     public String getLanguage() {
