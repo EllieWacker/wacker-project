@@ -36,6 +36,13 @@ public class HomeServlet extends HttpServlet
         Puppy puppy3 = PuppyDAO.getPuppy("GLit2Four");
         req.setAttribute("puppy3", puppy3);
 
+        String adminEmail = System.getenv("ADMIN_EMAIL");
+        if (adminEmail == null || adminEmail.isEmpty()) {
+            adminEmail = System.getProperty("ADMIN_EMAIL");
+        }
+        System.out.println("Admin Email Retrieved: " + adminEmail);
+
+
         req.setAttribute("pageTitle", "Home");
         req.getRequestDispatcher("/WEB-INF/home.jsp").forward(req, resp);
     }
