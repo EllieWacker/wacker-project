@@ -1,5 +1,6 @@
 package edu.kirkwood.wackerproject.controller;
 
+import edu.kirkwood.wackerproject.model.*;
 import edu.kirkwood.wackerproject.model.User;
 import edu.kirkwood.wackerproject.model.UserDAO;
 import jakarta.servlet.ServletException;
@@ -7,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -27,8 +29,7 @@ public class Signup extends HttpServlet {
         req.setAttribute("email", email);
         req.setAttribute("password1", password1);
         req.setAttribute("password2", password2);
-        req.setAttribute("terms", (terms != null && terms[0].equals("agree")) ? "agree" : "");
-        req.setAttribute("pageTitle", "Sign up for an account");
+        req.setAttribute("terms", terms != null && terms[0].equals("agree") ? "agree" : "");
 
         User user = new User();
         boolean errorFound = false;
@@ -61,8 +62,29 @@ public class Signup extends HttpServlet {
             req.setAttribute("termsError", "You must agree to our terms of use");
         }
 
+        if(!errorFound) {
+            user.setPrivileges("user");
+            user.setStatus("active");
+            boolean userAdded = false;
+            try {
+                userAdded = UserDAO.add(user);
+            } catch (RuntimeException e) {
+                req.setAttribute("userAddFail", "User could not be added");
+            }
+            if(userAdded) {
+                user.setPassword(null);
+                HttpSession session = req.getSession(); // get an existing session if one exists
+                session.invalidate(); // remove any existing sessions
+                session = req.getSession(); // create a brand new session
+                session.setAttribute("activeUser", user);
+                session.setAttribute("flashMessageSuccess", "User successfully added");
+                resp.sendRedirect(req.getContextPath()); // Redirects the user to the homepage
+                return;
+            }
+        }
 
 
+        req.setAttribute("pageTitle", "Sign up for an account");
         req.getRequestDispatcher("/WEB-INF/signup.jsp").forward(req, resp);
     }
 }

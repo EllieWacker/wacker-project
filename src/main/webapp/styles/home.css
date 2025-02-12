@@ -83,3 +83,13 @@
         font-size: 3.5rem;
     }
 }
+
+.testimonial-img {
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}

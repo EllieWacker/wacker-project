@@ -1,6 +1,8 @@
 package edu.kirkwood.wackerproject.model;
 
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,8 +15,14 @@ import static edu.kirkwood.shared.MySQL_Connect.getConnection;
 
 public class UserDAO {
     public static void main(String[] args) {
-        getAll().forEach(System.out::println);
-        System.out.println(get("delete-me2@example.com"));
+       // getAll().forEach(System.out::println);
+       // System.out.println(get("delete-me2@example.com"));
+        User user = new User();
+        user.setEmail("test1@test.com");
+        user.setPassword("P@ssw0rd".toCharArray());
+        user.setStatus("Active");
+        user.setPrivileges("Admin");
+        add(user);
     }
     public static List<User> getAll() {
 
@@ -77,5 +85,20 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
         return user;
+    }
+
+    public static boolean add(User user) {
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_add_user(?,?,?,?)}");
+        ) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, BCrypt.hashpw(String.valueOf(user.getPassword()), BCrypt.gensalt(12)));
+            statement.setString(3, user.getStatus());
+            statement.setString(4, user.getPrivileges());
+            int rowsAdded = statement.executeUpdate();
+            return rowsAdded == 1;
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -5,6 +5,9 @@
             <p class="col-lg-10 fs-4">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
+            <c:if test="${not empty userAddFail}">
+                <div class="alert alert-danger mb-2">${userAddFail}</div>
+            </c:if>
             <form method="POST" action="${appURL}/signup" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control <c:if test="${not empty emailError}">is-invalid</c:if>" id="email" name="email" value="${email}" placeholder="name@example.com">
