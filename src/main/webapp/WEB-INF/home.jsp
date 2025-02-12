@@ -5,20 +5,20 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-4">
-                <img src="${pageContext.request.contextPath}${puppy1.image}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
+            <div class="col-lg-4"><!--I found the fn online to make an extra / go away -->
+                <img src="${pageContext.request.contextPath}${fn:replace(puppy1.image, '^/', '')}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
                 <h2 class="fw-normal">Aussiedoodle Puppies</h2>
                 <p>We are known for our adorable Mini Aussies! Click the button below to learn more.</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
-                <img src="${pageContext.request.contextPath}${puppy2.image}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
+                <img src="${pageContext.request.contextPath}${fn:replace(puppy2.image, '^/', '')}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
                 <h2 class="fw-normal">Cockapoo Puppiess</h2>
                 <p>Our Cockapoo puppies are absolutely precious! Click the button below to learn more.</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
-                <img src="${pageContext.request.contextPath}${puppy3.image}" alt="Dog Image" style="object-fit: cover;" class="rounded-circle" width="140" height="140">
+                <img src="${pageContext.request.contextPath}${fn:replace(puppy3.image, '^/', '')}" alt="Dog Image" style="object-fit: cover;" class="rounded-circle" width="140" height="140">
                 <h2 class="fw-normal">Goldendoodle Puppies</h2>
                 <p>These Mini Goldendoodles are as sweet as they come! Click the button below to learn more.</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
@@ -34,7 +34,7 @@
                 <p class="lead">${meyerTestimonial.details}</p>
             </div>
             <div class="col-md-5 d-flex justify-content-center align-items-center">
-                <img src="${pageContext.request.contextPath}${meyerTestimonial.image}" alt="Your Image" class="testimonial-img img-fluid" width="300" height="300">
+                <img src="${pageContext.request.contextPath}${fn:replace(meyerTestimonial.image, '^/', '')}" alt="Your Image" class="testimonial-img img-fluid" width="300" height="300">
             </div>
 
         </div>
@@ -47,7 +47,7 @@
                 <p class="lead">${sannerTestimonial.details}</p>
             </div>
             <div class="col-md-5 order-md-1">
-                <img src="${pageContext.request.contextPath}${sannerTestimonial.image}" alt="Your Image" class="testimonial-img img-fluid" width="300" height="300">
+                <img src="${pageContext.request.contextPath}${fn:replace(sannerTestimonial.image, '^/', '')}" alt="Your Image" class="testimonial-img img-fluid" width="300" height="300">
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                 <p class="lead">${wackerTestimonial.details}</p>
             </div>
             <div class="col-md-5">
-                <img src="${pageContext.request.contextPath}${wackerTestimonial.image}" alt="Your Image" class="testimonial-img img-fluid" width="300" height="300">
+                <img src="${pageContext.request.contextPath}${fn:replace(wackerTestimonial.image, '^/', '')}" alt="Your Image" class="testimonial-img img-fluid" width="300" height="300">
             </div>
         </div>
         <hr class="featurette-divider">
