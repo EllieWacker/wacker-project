@@ -90,6 +90,12 @@ public class Email extends HttpServlet {
             // Thread interruption handling
             req.setAttribute("errorText", "<ul><li>There was an error sending the email.</li></ul>");
         }
+        try {
+            EmailThread emailTest = new EmailThread("your-email@example.com", "Test Email", "This is a test message.", "no-reply@yourdomain.com");
+            emailTest.start();
+        } catch (Exception e) {
+            e.printStackTrace(); // Log error for debugging
+        }
 
         // Forward the request back to the JSP page for display
         req.getRequestDispatcher("contact.jsp").forward(req, resp);
