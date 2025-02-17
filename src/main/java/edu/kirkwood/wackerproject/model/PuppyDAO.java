@@ -33,8 +33,9 @@ public class PuppyDAO {
                             String adopted = resultSet.getString("adopted");
                             boolean microchip = resultSet.getBoolean("microchip");
                             double price = resultSet.getDouble("price");
+                            String breedDescription = resultSet.getString("breedDescription");
 
-                            puppy = new Puppy(puppyID, breedID, litterID, medicalRecordID, image, gender, adopted, microchip, price);
+                            puppy = new Puppy(puppyID, breedID, litterID, medicalRecordID, image, gender, adopted, microchip, price, breedDescription);
                         }
                     }
                 }

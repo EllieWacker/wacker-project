@@ -11,11 +11,12 @@ public class Puppy {
     private String adopted	;
     private boolean microchip	;
     private double price;
+    private String breedDescription;
 
     public Puppy() {
     }
 
-    public Puppy(String puppyID, String breedID, String litterID, String medicalRecordID, String image, String gender, String adopted, boolean microchip, double price) {
+    public Puppy(String puppyID, String breedID, String litterID, String medicalRecordID, String image, String gender, String adopted, boolean microchip, double price, String breedDescription) {
         this.puppyID = puppyID;
         this.breedID = breedID;
         this.litterID = litterID;
@@ -25,6 +26,7 @@ public class Puppy {
         this.adopted = adopted;
         this.microchip = microchip;
         this.price = price;
+        this.breedDescription = breedDescription;
     }
 
     public String getPuppyID() {
@@ -99,6 +101,15 @@ public class Puppy {
         this.price = price;
     }
 
+
+    public String getBreedDescription() {
+        return breedDescription;
+    }
+
+    public void setBreedDescription(String breedDescription) {
+        this.breedDescription = breedDescription;
+    }
+
     @Override
     public String toString() {
         return "Puppy{" +
@@ -111,6 +122,7 @@ public class Puppy {
                 ", adopted='" + adopted + '\'' +
                 ", microchip=" + microchip +
                 ", price=" + price +
+                ", breedDescription='" + breedDescription + '\'' +
                 '}';
     }
 }

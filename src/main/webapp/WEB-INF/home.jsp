@@ -7,20 +7,20 @@
         <div class="row">
             <div class="col-lg-4"><!--I found the fn online to make an extra / go away -->
                 <img src="${pageContext.request.contextPath}${fn:replace(puppy1.image, '^/', '')}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
-                <h2 class="fw-normal">Aussiedoodle Puppies</h2>
-                <p>We are known for our adorable Mini Aussies! Click the button below to learn more.</p>
+                <h2 class="fw-normal">${puppy1.breedID} Puppies</h2>
+                <p>${puppy1.breedDescription}</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <img src="${pageContext.request.contextPath}${fn:replace(puppy2.image, '^/', '')}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
-                <h2 class="fw-normal">Cockapoo Puppiess</h2>
-                <p>Our Cockapoo puppies are absolutely precious! Click the button below to learn more.</p>
+                <h2 class="fw-normal">${puppy2.breedID} Puppies</h2>
+                <p>${puppy2.breedDescription}</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <img src="${pageContext.request.contextPath}${fn:replace(puppy3.image, '^/', '')}" alt="Dog Image" style="object-fit: cover;" class="rounded-circle" width="140" height="140">
-                <h2 class="fw-normal">Goldendoodle Puppies</h2>
-                <p>These Mini Goldendoodles are as sweet as they come! Click the button below to learn more.</p>
+                <h2 class="fw-normal">${puppy3.breedID} Puppies</h2>
+                <p>${puppy3.breedDescription}</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
             </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
