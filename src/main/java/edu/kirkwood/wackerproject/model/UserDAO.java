@@ -3,10 +3,7 @@ package edu.kirkwood.wackerproject.model;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +71,11 @@ public class UserDAO {
                             String privileges = resultSet.getString("privileges");
                             Instant created_at = resultSet.getTimestamp("created_at").toInstant();
                             String timezone = resultSet.getString("timezone");
-                            Instant dateOfBirth = resultSet.getTimestamp("date_of_birth").toInstant();
+                            Instant dateOfBirth = null;
+                            Timestamp dobTimestamp = resultSet.getTimestamp("date_of_birth");
+                            if (dobTimestamp != null) {
+                                dateOfBirth = dobTimestamp.toInstant();
+                            }
                             String interests = resultSet.getString("interests");
                             user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, created_at, timezone, dateOfBirth, interests);
                         }

@@ -32,7 +32,7 @@
                     <div class="text-end">
                         <c:choose>
                             <c:when test="${empty sessionScope.activeUser}">
-                                <a href="#" class="btn btn-outline-dark me-2">Login</a>
+                                <a href="${appURL}/login" class="btn btn-outline-dark me-2">Login</a>
                                 <a href="${appURL}/signup" class="btn btn-warning">Sign-up</a>
                             </c:when>
                             <c:otherwise>
