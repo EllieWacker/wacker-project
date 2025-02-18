@@ -29,24 +29,6 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String token = req.getParameter("cf-turnstile-response");
-
-        URL url = new URL("https://challenges.cloudflare.com/turnstile/v0/siteverify");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setDoOutput(true);
-
-        String secretKey = System.getenv("SECRET_KEY");
-        String postData = "secret=" + URLEncoder.encode(secretKey, "UTF-8") +
-                "&response=" + URLEncoder.encode(token, "UTF-8");
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(postData.getBytes(StandardCharsets.UTF_8));
-        }
-
-        Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8.name());
-        String verificationResponse = scanner.useDelimiter("\\A").next();
-
 
 
         String email = req.getParameter("email");
@@ -89,6 +71,24 @@ public class Login extends HttpServlet {
             }
         }
 
+
+        String token = req.getParameter("cf-turnstile-response");
+
+        URL url = new URL("https://challenges.cloudflare.com/turnstile/v0/siteverify");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setDoOutput(true);
+
+        String secretKey = System.getenv("SECRET_KEY");
+        String postData = "secret=" + URLEncoder.encode(secretKey, "UTF-8") +
+                "&response=" + URLEncoder.encode(token, "UTF-8");
+        try (OutputStream os = conn.getOutputStream()) {
+            os.write(postData.getBytes(StandardCharsets.UTF_8));
+        }
+
+        Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8.name());
+        String verificationResponse = scanner.useDelimiter("\\A").next();
 
 
         req.setAttribute("pageTitle", "Login");
