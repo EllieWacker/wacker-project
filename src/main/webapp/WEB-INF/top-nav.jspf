@@ -17,14 +17,14 @@
                         <li class="nav-item">
                             <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
+                        <c:if test="${not empty sessionScope.activeUser && sessionScope.activeUser.privileges == 'admin'}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="${appURL}/users">All Users</a></li>
+                                </ul>
+                            </li>
+                        </c:if>
                     </ul>
                     <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
                         <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
@@ -36,7 +36,7 @@
                                 <a href="${appURL}/signup" class="btn btn-warning">Sign-up</a>
                             </c:when>
                             <c:otherwise>
-                                <a href="#" class="btn btn-outline-secondary me-2">Sign out</a>
+                                <a href="${appURL}/signout" class="btn btn-outline-secondary me-2">Sign out</a>
                                 <a href="#" class="btn btn-primary">My Profile</a>
                             </c:otherwise>
                         </c:choose>

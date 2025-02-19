@@ -39,8 +39,8 @@ public class UserDAO {
                 String privileges = rs.getString("privileges");
                 Instant createdAt = rs.getTimestamp("created_at").toInstant();
                 String timezone = rs.getString("timezone");
-                Instant dateOfBirth = rs.getTimestamp("date_of_birth").toInstant();
-                String interests = rs.getString("interests");
+                Timestamp timestamp = rs.getTimestamp("date_of_birth");
+                Instant dateOfBirth = (timestamp != null) ? timestamp.toInstant() : null;                String interests = rs.getString("interests");
 
                 User user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, createdAt, timezone, dateOfBirth, interests);
                 list.add(user);

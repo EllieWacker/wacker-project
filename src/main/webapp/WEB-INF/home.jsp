@@ -2,6 +2,7 @@
     <div class="container marketing">
         <div class="container text-center my-5 p-5 rounded" style="background-color: #707070;">
             <h1 class="display-4 fw-bold" style="color: white">Welcome to Doodle Dogs!</h1>
+            <p style="color: white; font-size: 1.2rem">The most reliable dog breeder in Cedar Rapids!</p>
         </div>
 
         <div class="row">

@@ -2,10 +2,7 @@
     <c:if test="${not empty loginFail}">
         <div class="alert alert-danger mb-2">${loginFail}</div>
     </c:if>
-    <form method="post" action="${appURL}/login">
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9VdGNwoABtWiZW"></div>
-
+    <form method="post" action="${appURL}/login" id="loginForm">
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
         <div class="form-floating">
@@ -23,7 +20,6 @@
                 Remember me for 30 days
             </label>
         </div>
-
         <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
         <p class="mt-5 mb-3 text-body-secondary">Don't have an account? <a href="${appURL}/signup">Sign-up</a></p>
     </form>

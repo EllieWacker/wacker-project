@@ -11,13 +11,6 @@ import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-
 @WebServlet("/login")
 public class Login extends HttpServlet {
     @Override
@@ -28,9 +21,6 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
-
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String[] rememberMe = req.getParameterValues("rememberMe");
@@ -38,7 +28,7 @@ public class Login extends HttpServlet {
         req.setAttribute("password", password);
         req.setAttribute("rememberMe", (rememberMe != null && rememberMe[0].equals("true")) ? "true" : "");
 
-        User user = new User();
+        User user = null;
         try {
             user = UserDAO.get(email);
         } catch (RuntimeException e) {
@@ -46,23 +36,37 @@ public class Login extends HttpServlet {
         }
 
         if (user == null) {
+            // No user found that matches the email
             req.setAttribute("loginFail", "No user found with that email address. <a href=\"signup\">Sign-up</a>"); // For security, it might be better to just say "No user found".
         } else {
             boolean passwordMatches = false;
             try {
-                passwordMatches = BCrypt.checkpw(password, new String(user.getPassword()));            } catch (Exception e) {
+                passwordMatches = BCrypt.checkpw(password, String.valueOf(user.getPassword()));
+            } catch (Exception e) {
                 req.setAttribute("loginFail", "An error occurred."); // Use e.getMessage() to see the NoSuchAlgorithmException or InvalidKeySpecException
             }
             // No user found that matches the password
             if (!passwordMatches) {
                 req.setAttribute("loginFail",  "The password you entered is incorrect."); // For security, it might be better to just say "No user found".
             } else {
+                if(!user.getStatus().equals("active")) {
+                    // the users account is not active or locked
+                    req.setAttribute("loginFail",  "Your account is locked or inactive. Please reset your password.");
+                    req.setAttribute("pageTitle", "Login");
+                    req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
+                    return;
+                };
+
                 // Successful login
                 user.setPassword(null); // Remove the password before setting the User object as a session attribute
 
                 HttpSession session = req.getSession(); // Get existing HttSession object
                 session.invalidate(); // Remove any existing session attributes
                 session = req.getSession(); // Create new HttpSession
+                // session.removeAttribute("activeUser"); // Instead of destroying all attributes, remove only the ones necessary
+                if(rememberMe != null && rememberMe[0].equals("true")) {
+                    session.setMaxInactiveInterval(30 * 24 * 60 * 60); // represented in seconds
+                }
                 session.setAttribute("activeUser", user);
                 session.setAttribute("flashMessageSuccess", String.format("Welcome back%s!", (user.getFirstName() != null && !user.getFirstName().equals("") ? " " + user.getFirstName() : "")));
 
@@ -70,26 +74,6 @@ public class Login extends HttpServlet {
                 return;
             }
         }
-
-
-        String token = req.getParameter("cf-turnstile-response");
-
-        URL url = new URL("https://challenges.cloudflare.com/turnstile/v0/siteverify");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.setDoOutput(true);
-
-        String secretKey = System.getenv("SECRET_KEY");
-        String postData = "secret=" + URLEncoder.encode(secretKey, "UTF-8") +
-                "&response=" + URLEncoder.encode(token, "UTF-8");
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(postData.getBytes(StandardCharsets.UTF_8));
-        }
-
-        Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8.name());
-        String verificationResponse = scanner.useDelimiter("\\A").next();
-
 
         req.setAttribute("pageTitle", "Login");
         req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
