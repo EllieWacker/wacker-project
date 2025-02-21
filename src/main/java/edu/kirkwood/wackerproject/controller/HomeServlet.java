@@ -40,7 +40,6 @@ public class HomeServlet extends HttpServlet
         if (adminEmail == null || adminEmail.isEmpty()) {
             adminEmail = System.getProperty("ADMIN_EMAIL");
         }
-        System.out.println("Admin Email Retrieved: " + adminEmail);
 
 
         req.setAttribute("pageTitle", "Home");

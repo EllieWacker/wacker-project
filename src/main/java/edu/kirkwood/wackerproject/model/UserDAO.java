@@ -102,4 +102,17 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public static boolean updateStatus(String email, String newStatus) {
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_update_user_status(?,?)}")){
+
+            statement.setString(1, email);
+            statement.setString(2, newStatus);
+            int rowsAdded = statement.executeUpdate();
+            return rowsAdded == 1;
+        } catch(SQLException e) {
+            throw new RuntimeException("Error updating user status", e);
+        }
+    }
 }

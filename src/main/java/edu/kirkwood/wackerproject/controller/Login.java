@@ -13,6 +13,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 @WebServlet("/login")
 public class Login extends HttpServlet {
+    private static final int maxTries = 5;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("pageTitle", "Login");
@@ -27,6 +28,12 @@ public class Login extends HttpServlet {
         req.setAttribute("email", email);
         req.setAttribute("password", password);
         req.setAttribute("rememberMe", (rememberMe != null && rememberMe[0].equals("true")) ? "true" : "");
+
+        HttpSession session = req.getSession();
+        Integer attempts = (Integer) session.getAttribute("loginAttempts");
+        if(attempts == null){
+            attempts = 0;
+        }
 
         User user = null;
         try {
@@ -47,7 +54,18 @@ public class Login extends HttpServlet {
             }
             // No user found that matches the password
             if (!passwordMatches) {
-                req.setAttribute("loginFail",  "The password you entered is incorrect."); // For security, it might be better to just say "No user found".
+                attempts++;
+                session.setAttribute("loginAttempts", attempts);
+                int attemptsRemaining = maxTries - attempts;
+
+                if(attempts >= maxTries){
+                    user.setStatus("locked");
+                    UserDAO.updateStatus(user.getEmail(), "locked");
+                    req.setAttribute("loginFail", "Account is locked. Please reset your password to unlock.");
+                }
+                else{
+                    req.setAttribute("loginFail",  "Incorrect password. You have " + attemptsRemaining + " attempts remaining."); // For security, it might be better to just say "No user found".
+                }
             } else {
                 if(!user.getStatus().equals("active")) {
                     // the users account is not active or locked
@@ -60,7 +78,7 @@ public class Login extends HttpServlet {
                 // Successful login
                 user.setPassword(null); // Remove the password before setting the User object as a session attribute
 
-                HttpSession session = req.getSession(); // Get existing HttSession object
+                session = req.getSession(); // Get existing HttSession object
                 session.invalidate(); // Remove any existing session attributes
                 session = req.getSession(); // Create new HttpSession
                 // session.removeAttribute("activeUser"); // Instead of destroying all attributes, remove only the ones necessary
