@@ -1,12 +1,14 @@
 package edu.kirkwood.wackerproject.model;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static edu.kirkwood.shared.MySQL_Connect.getConnection;
 
@@ -114,5 +116,40 @@ public class UserDAO {
         } catch(SQLException e) {
             throw new RuntimeException("Error updating user status", e);
         }
+    }
+
+    public static String passwordReset(String email, HttpServletRequest req) {
+        User user = get(email);
+        if (user == null) {
+            return "No user found that matches the email";
+        } else {
+            try (Connection connection = getConnection()) {
+                if (connection != null) {
+                    String uuid = String.valueOf(UUID.randomUUID());
+                    try (CallableStatement statement = connection.prepareCall("{CALL sp_add_password_reset(?, ?)}")) {
+                        statement.setString(1, email);
+                        statement.setString(2, uuid);
+                        statement.executeUpdate();
+                    }
+                    String subject = "Reset Password";
+                    String message = "<h2Reset Password</h2>";
+                    message += "<p>Please use this link to securely reset your password. This link will remain active for 30 minutes.</p>";
+                    String appUrl = "";
+                    if(req.isSecure()) {
+                        appUrl = req.getServletContext().getInitParameter("appURLAzure");
+                    } else {
+                        appUrl = req.getServletContext().getInitParameter("appURLLocal");
+                    }
+                    String fullURL = String.format("%s/new-password?key=%s", appUrl, uuid);
+                    message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
+                    message += "<p>If you did not request to reset your password, you can ignore this message and your password will not be changed.</p>";
+                    // Send Email
+                    return "If there's an account associated with the email entered, we will send a password reset link.";
+                }
+            } catch (SQLException e) {
+                return "Error resetting password";
+            }
+        }
+        return "Error - Could not send password reset email";
     }
 }
