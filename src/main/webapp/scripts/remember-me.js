@@ -16,16 +16,4 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.removeItem("rememberedEmail");
         }
     });
-
-
-
-    loginForm.addEventListener("", function (event) {
-        if (rememberMeCheckbox.checked) {
-            localStorage.setItem("rememberedEmail", emailInput.value);
-        } else {
-            localStorage.removeItem("rememberedEmail");
-        }
-    });
-
 });
-
