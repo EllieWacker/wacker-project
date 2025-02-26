@@ -4,18 +4,18 @@ public class EmailThread extends Thread {
     private String toEmailAddress;
     private String subject;
     private String bodyHTML;
-    private String replyTo;
+   // private String replyTo;
     private String errorMessage;
 
-    public EmailThread(String toEmailAddress, String subject, String bodyHTML, String replyTo) {
+    public EmailThread(String toEmailAddress, String subject, String bodyHTML) {
         this.toEmailAddress = toEmailAddress;
         this.subject = subject;
         this.bodyHTML = bodyHTML;
-        this.replyTo = replyTo;
+       // this.replyTo = replyTo;
     }
 
     public void run() {
-        errorMessage = edu.kirkwood.shared.email.AzureEmail.sendEmail(toEmailAddress, subject, bodyHTML, replyTo);
+        errorMessage = edu.kirkwood.shared.email.AzureEmail.sendEmail(toEmailAddress, subject, bodyHTML);
         // TODO: Add a backup email service if an error occurs
     }
     public String getErrorMessage() {

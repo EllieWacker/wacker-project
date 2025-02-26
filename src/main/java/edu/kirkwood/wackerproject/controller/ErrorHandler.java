@@ -33,14 +33,14 @@ public class ErrorHandler extends HttpServlet {
 
         String adminEmail = System.getenv("ADMIN_EMAIL");
 
-        try {
-            EmailThread emailThread = new EmailThread(adminEmail, subject, bodyHTML, "no-reply@yourdomain.com");
-            emailThread.start();
-            emailThread.join();
-        } catch (InterruptedException e) {
+       // try {
+         //   EmailThread emailThread = new EmailThread(adminEmail, subject, bodyHTML, "no-reply@yourdomain.com");
+           // emailThread.start();
+          //  emailThread.join();
+       // } catch (InterruptedException e) {
             // Handle email sending failure (optional logging)
-            e.printStackTrace();
-        }
+           // e.printStackTrace();
+       // }
 
 
 

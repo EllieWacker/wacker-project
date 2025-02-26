@@ -1,6 +1,8 @@
 package edu.kirkwood.shared;
 
 
+import org.jsoup.Jsoup;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -15,7 +17,7 @@ public class Helpers {
 
     // https://stackoverflow.com/a/3149645/6629315
     public static String html2text(String html) {
-        return html.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
+        return Jsoup.parse(html).text();
     }
 }
 

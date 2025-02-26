@@ -69,27 +69,27 @@ public class Email extends HttpServlet {
         }
 
         // No errors, proceed to send the email
-        try {
-            // Create an email thread to send the email asynchronously
-            EmailThread emailThread = new EmailThread(toEmailAddress, subject, bodyHTML, replyTo);
-            emailThread.start();
-            emailThread.join(); // Wait for the email to be sent
-
-            String emailErrorMessage = emailThread.getErrorMessage();
-            if (emailErrorMessage.isEmpty()) {
-                // Success: Set success message and clear form values
-                req.setAttribute("messages", "<ul><li>Message sent successfully!</li></ul>");
-                req.setAttribute("email", replyTo);  // Retain the email in case of redirection
-                req.setAttribute("subject", subject); // Retain the subject
-                req.setAttribute("body", bodyHTML);  // Retain the body
-            } else {
-                // Failure: Set the error message
-                req.setAttribute("errorText", "<ul><li>" + emailErrorMessage + "</li></ul>");
-            }
-        } catch (InterruptedException e) {
-            // Thread interruption handling
-            req.setAttribute("errorText", "<ul><li>There was an error sending the email.</li></ul>");
-        }
+//        try {
+//            // Create an email thread to send the email asynchronously
+//            EmailThread emailThread = new EmailThread(toEmailAddress, subject, bodyHTML, replyTo);
+//            emailThread.start();
+//            emailThread.join(); // Wait for the email to be sent
+//
+//            String emailErrorMessage = emailThread.getErrorMessage();
+//            if (emailErrorMessage.isEmpty()) {
+//                // Success: Set success message and clear form values
+//                req.setAttribute("messages", "<ul><li>Message sent successfully!</li></ul>");
+//                req.setAttribute("email", replyTo);  // Retain the email in case of redirection
+//                req.setAttribute("subject", subject); // Retain the subject
+//                req.setAttribute("body", bodyHTML);  // Retain the body
+//            } else {
+//                // Failure: Set the error message
+//                req.setAttribute("errorText", "<ul><li>" + emailErrorMessage + "</li></ul>");
+//            }
+//        } catch (InterruptedException e) {
+//            // Thread interruption handling
+//            req.setAttribute("errorText", "<ul><li>There was an error sending the email.</li></ul>");
+//        }
 
         // Forward the request back to the JSP page for display
         req.getRequestDispatcher("contact.jsp").forward(req, resp);

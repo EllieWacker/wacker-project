@@ -2,6 +2,7 @@ package edu.kirkwood.shared.email;
 
 import com.azure.communication.email.EmailClient;
 import com.azure.communication.email.EmailClientBuilder;
+import edu.kirkwood.shared.Config;
 import edu.kirkwood.shared.Helpers;
 import edu.kirkwood.shared.Validators;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -10,30 +11,29 @@ import com.azure.communication.email.models.EmailMessage;
 import com.azure.communication.email.models.EmailSendResult;
 import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.SyncPoller;
+import org.jsoup.Jsoup;
 
 public class AzureEmail {
     public static EmailClient getEmailClient() {
-        String connectionString = Dotenv.load().get("AZURE_EMAIL_CONNECTION");
+        String connectionString = Config.getEnv("AZURE_EMAIL_CONNECTION");
 
         EmailClient emailClient = new EmailClientBuilder()
                 .connectionString(connectionString)
                 .buildClient();
-
         return emailClient;
     }
-
-    public static String sendEmail(String toEmailAddress, String subject, String bodyHTML, String replyTo) {
+    public static String sendEmail(String toEmailAddress, String subject, String bodyHTML) {
         EmailClient emailClient = getEmailClient();
         EmailAddress toAddress = new EmailAddress(toEmailAddress);
+        EmailAddress replyToAddress = new EmailAddress(Config.getEnv("ADMIN_EMAIL"));
         String body = Helpers.html2text(bodyHTML);
-        EmailAddress replyToAddress = new EmailAddress(replyTo);
         EmailMessage emailMessage = new EmailMessage()
-                .setSenderAddress(Dotenv.load().get("AZURE_EMAIL_FROM"))
+                .setSenderAddress(Config.getEnv("AZURE_EMAIL_FROM"))
                 .setToRecipients(toAddress)
                 .setSubject(subject)
+                .setReplyTo(replyToAddress)
                 .setBodyPlainText(body)
-                .setBodyHtml(bodyHTML)
-                .setReplyTo(replyToAddress);
+                .setBodyHtml(bodyHTML);
         SyncPoller<EmailSendResult, EmailSendResult> poller = null;
         try {
             poller = emailClient.beginSend(emailMessage, null);
@@ -81,9 +81,9 @@ public class AzureEmail {
 
 
         if(!error) {
-            EmailThread emailThread1 = new EmailThread(toEmailAddress, subject, bodyHTML, replyTo);
+            EmailThread emailThread1 = new EmailThread(toEmailAddress, subject, bodyHTML);
             emailThread1.start();
-            EmailThread emailThread2 = new EmailThread("ejwacker15@gmail.com", subject, bodyHTML, replyTo);
+            EmailThread emailThread2 = new EmailThread("ejwacker15@gmail.com", subject, bodyHTML);
             emailThread2.start();
             try {
                 emailThread1.join();
@@ -101,6 +101,5 @@ public class AzureEmail {
                 System.out.println("Message not sent to " + toEmailAddress + " - " + errorMessage1);
             }
         }
-        // Forward req/resp to a JSP
     }
 }

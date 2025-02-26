@@ -1,6 +1,7 @@
 package edu.kirkwood.wackerproject.model;
 
 
+import edu.kirkwood.shared.email.EmailThread;
 import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -121,35 +122,48 @@ public class UserDAO {
     public static String passwordReset(String email, HttpServletRequest req) {
         User user = get(email);
         if (user == null) {
-            return "No user found that matches the email";
+            return "No user found that matches that email";
         } else {
             try (Connection connection = getConnection()) {
-                if (connection != null) {
-                    String uuid = String.valueOf(UUID.randomUUID());
-                    try (CallableStatement statement = connection.prepareCall("{CALL sp_add_password_reset(?, ?)}")) {
-                        statement.setString(1, email);
-                        statement.setString(2, uuid);
-                        statement.executeUpdate();
-                    }
+                String uuid = String.valueOf(UUID.randomUUID());
+                CallableStatement statement = connection.prepareCall("{call sp_add_password_reset(?,?)}");
+                statement.setString(1, email);
+                statement.setString(2, uuid);
+                int rowsAffected = statement.executeUpdate();
+                if (rowsAffected > 0) {
+                    // generate email html
                     String subject = "Reset Password";
-                    String message = "<h2Reset Password</h2>";
-                    message += "<p>Please use this link to securely reset your password. This link will remain active for 30 minutes.</p>";
-                    String appUrl = "";
-                    if(req.isSecure()) {
-                        appUrl = req.getServletContext().getInitParameter("appURLAzure");
+                    String message = "<h2>Reset Password</h2>";
+                    message += "<p>Please click this link to securely reset your password. This link expires in 30 minutes.</p>";
+                    String appURL = "";
+                    if (req.isSecure()) {
+                        appURL = req.getServletContext().getInitParameter("appURLCloud");
                     } else {
-                        appUrl = req.getServletContext().getInitParameter("appURLLocal");
+                        appURL = req.getServletContext().getInitParameter("appURLLocal");
                     }
-                    String fullURL = String.format("%s/new-password?key=%s", appUrl, uuid);
+                    String fullURL = String.format("%s/new-password?token=%s", appURL, uuid);
                     message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
                     message += "<p>If you did not request to reset your password, you can ignore this message and your password will not be changed.</p>";
-                    // Send Email
-                    return "If there's an account associated with the email entered, we will send a password reset link.";
+                    // send email
+                    EmailThread emailThread = new EmailThread(email, subject, message);
+                    emailThread.start();
+                    try {
+                        emailThread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String errorMessage = emailThread.getErrorMessage();
+                    if(errorMessage == null || errorMessage.isEmpty()) {
+                        return "If there's an account associated with the email entered, we will send a password reset link.";
+                    } else {
+                        return "Sorry, we couldn't process your password reset. Try again.";
+                    }
+                } else {
+                    return "Sorry, we couldn't process your password reset. Try again.";
                 }
             } catch (SQLException e) {
-                return "Error resetting password";
+                return "Sorry, we couldn't process your password reset. Try again.";
             }
         }
-        return "Error - Could not send password reset email";
     }
 }
