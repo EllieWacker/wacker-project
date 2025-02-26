@@ -133,8 +133,10 @@ public class UserDAO {
                 if (rowsAffected > 0) {
                     // generate email html
                     String subject = "Reset Password";
-                    String message = "<h2>Reset Password</h2>";
-                    message += "<p>Please click this link to securely reset your password. This link expires in 30 minutes.</p>";
+                    String imagePath = req.getContextPath() + "/images/lock.jpg";
+                    String message = "<img src='" + imagePath + "' alt='Lock Image'>";
+                    message += "<h2>FORGOT YOUR PASSWORD?</h2>";
+                    message += "<p>Don't worry! Just click this link to reset your password. This link expires in 30 minutes.</p>";
                     String appURL = "";
                     if (req.isSecure()) {
                         appURL = req.getServletContext().getInitParameter("appURLCloud");
