@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,10 +134,9 @@ public class UserDAO {
                 if (rowsAffected > 0) {
                     // generate email html
                     String subject = "Reset Password";
-                    String imagePath = req.getContextPath() + "/images/lock.jpg";
-                    String message = "<img src='" + imagePath + "' alt='Lock Image'>";
-                    message += "<h2>FORGOT YOUR PASSWORD?</h2>";
-                    message += "<p>Don't worry! Just click this link to reset your password. This link expires in 30 minutes.</p>";
+                    String message = "<img src='https://wacker.azurewebsites.net/images/lock.jpg' alt='Lock Image' style='width: 10em; margin-left: 5em;'>";
+                    message += "<h2 style='color: black;'>FORGOT YOUR PASSWORD?</h2>";
+                    message += "<p style='color: black;'>Don't worry! Just click this link to reset your password.</p>";
                     String appURL = "";
                     if (req.isSecure()) {
                         appURL = req.getServletContext().getInitParameter("appURLCloud");
@@ -144,8 +144,9 @@ public class UserDAO {
                         appURL = req.getServletContext().getInitParameter("appURLLocal");
                     }
                     String fullURL = String.format("%s/new-password?token=%s", appURL, uuid);
-                    message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
-                    message += "<p>If you did not request to reset your password, you can ignore this message and your password will not be changed.</p>";
+                    message += String.format("<p><a href=\"%s\" target=\"_blank\" style='display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-align: center; text-decoration: none; border-radius: 5px;'>Reset Password</a></p>", fullURL, fullURL);
+                    message += "<p style='color: black;'>This link expires in 30 minutes.</p>";
+                    message += "<p style='color: black;'>If you did not request to reset your password, you can ignore this message and your password will not be changed.</p>";
                     // send email
                     EmailThread emailThread = new EmailThread(email, subject, message);
                     emailThread.start();
@@ -166,6 +167,46 @@ public class UserDAO {
             } catch (SQLException e) {
                 return "Sorry, we couldn't process your password reset. Try again.";
             }
+        }
+    }
+
+    public static String getPasswordReset(String token) {
+        String email = "";
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall("{CALL sp_get_password_reset(?)}")) {
+            statement.setString(1, token);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+//                Instant now = Instant.now();
+//                Instant created_at = resultSet.getTimestamp("created_at").toInstant();
+//                Duration duration = Duration.between(created_at, now);
+//                long minutesElapsed = duration.toMinutes();
+//                if(minutesElapsed < 30) {
+//                    email = resultSet.getString("email");
+//                }
+                int id = resultSet.getInt("id");
+                CallableStatement statement2 = connection.prepareCall("{CALL sp_delete_password_reset(?)}");
+                statement2.setInt(1, id);
+                statement2.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return email;
+    }
+
+    public static void updatePassword(String email, String password) {
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user_password(?, ?)}")) {
+                    statement.setString(1, email);
+                    String encryptedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+                    statement.setString(2, encryptedPassword);
+                    statement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
