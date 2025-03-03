@@ -53,36 +53,40 @@ public class NewPassword extends HttpServlet {
         }
 
         if(!errorFound) {
-            String email = ""; // Call UserDAO.getPasswordReset()
+            String email = UserDAO.getPasswordReset(token);
             if(email == null || email.equals("")) {
                 req.setAttribute("newPasswordFail", "Token not found");
             } else {
-                // Call UserDAO.updatePassword()
-                // Send confirmation email
-                String subject = "New Password Created";
-                String message = "<h2>New Password Created</h2>";
-                message += "<p>Your password has changed. If you suspect that someone else changed your password, please reset it with this link:</p>";
-                String appURL = "";
-                if(req.isSecure()) {
-                    appURL = req.getServletContext().getInitParameter("appURLCloud");
+                boolean passwordUpdated = UserDAO.updatePassword(email, password1);
+                if(passwordUpdated) {
+                    // Send confirmation email
+                    String subject = "New Password Created";
+                    String message = "<h2>New Password Created</h2>";
+                    message += "<p>Your password has changed. If you suspect that someone else changed your password, please reset it with this link:</p>";
+                    String appURL = "";
+                    if (req.isSecure()) {
+                        appURL = req.getServletContext().getInitParameter("appURLCloud");
+                    } else {
+                        appURL = req.getServletContext().getInitParameter("appURLLocal");
+                    }
+                    String fullURL = String.format("%s/reset-password", appURL);
+                    message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
+                    // send email
+                    EmailThread emailThread = new EmailThread(email, subject, message);
+                    emailThread.start();
+                    try {
+                        emailThread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    // Redirect the user to the login page
+                    HttpSession session = req.getSession(); // get an existing session if one exists
+                    session.setAttribute("flashMessageSuccess", "New password has been created. Please sign in.");
+                    resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/login")); // Redirects the user to the login page
+                    return;
                 } else {
-                    appURL = req.getServletContext().getInitParameter("appURLLocal");
+                    req.setAttribute("newPasswordFail", "Could not reset your password.");
                 }
-                String fullURL = String.format("%s/reset-password", appURL);
-                message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
-                // send email
-                EmailThread emailThread = new EmailThread(email, subject, message);
-                emailThread.start();
-                try {
-                    emailThread.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                // Log the user in
-                HttpSession session = req.getSession(); // get an existing session if one exists
-                session.setAttribute("flashMessageSuccess", "New password has been created. Please sign in.");
-                resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/login")); // Redirects the user to the login page
-                return;
             }
         }
 

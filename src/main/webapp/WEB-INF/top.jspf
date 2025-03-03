@@ -37,8 +37,9 @@
     <script src="${appURL}/scripts/session-timeout.js"></script>
     <%--  Additional JavaScript  --%>
     <c:if test="${pageTitle eq 'Login'}">
-        <script src="${appURL}/scripts/remember-me.js" defer></script> <!-- I looked up online ideas of why it wasnt loading and I found the defer attribute, which makes sure the script is fully loaded before executing
+        <script src="${appURL}/scripts/remember-me.js" defer></script>
     </c:if>
+
 
 </head>
 <body>

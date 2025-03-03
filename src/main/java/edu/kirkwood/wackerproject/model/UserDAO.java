@@ -177,13 +177,13 @@ public class UserDAO {
             statement.setString(1, token);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-//                Instant now = Instant.now();
-//                Instant created_at = resultSet.getTimestamp("created_at").toInstant();
-//                Duration duration = Duration.between(created_at, now);
-//                long minutesElapsed = duration.toMinutes();
-//                if(minutesElapsed < 30) {
-//                    email = resultSet.getString("email");
-//                }
+                Instant now = Instant.now();
+                Instant created_at = resultSet.getTimestamp("created_at").toInstant();
+                Duration duration = Duration.between(created_at, now);
+                long minutesElapsed = duration.toMinutes();
+                if(minutesElapsed < 30) {
+                    email = resultSet.getString("email");
+                }
                 int id = resultSet.getInt("id");
                 CallableStatement statement2 = connection.prepareCall("{CALL sp_delete_password_reset(?)}");
                 statement2.setInt(1, id);
@@ -195,18 +195,20 @@ public class UserDAO {
         return email;
     }
 
-    public static void updatePassword(String email, String password) {
+    public static boolean updatePassword(String email, String password) {
         try (Connection connection = getConnection()) {
             if (connection != null) {
                 try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user_password(?, ?)}")) {
                     statement.setString(1, email);
                     String encryptedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
                     statement.setString(2, encryptedPassword);
-                    statement.executeUpdate();
+                    int rowsAffected = statement.executeUpdate();
+                    return rowsAffected == 1;
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return false;
     }
 }
