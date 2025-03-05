@@ -62,11 +62,17 @@ public class Validators {
         return matcher.matches();
     }
 
-    //source: https://owasp.org/www-community/OWASP_Validation_Regex_Repository
     public static boolean isValidPhone(String phone) {
         String regex = "^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phone);
+        return matcher.matches();
+    }
+
+    public static boolean isValidLanguage(String language) {
+        String regex = "^(en-US|es-MX|fr-FR)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(language);
         return matcher.matches();
     }
 

@@ -72,9 +72,7 @@ public class User implements Comparable<User> {
         if(!Validators.isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email address");
         }
-        else{
-            this.email = email;
-        }
+        this.email = email;
     }
 
     public String getPhone() {
@@ -82,6 +80,9 @@ public class User implements Comparable<User> {
     }
 
     public void setPhone(String phone) {
+        if(!Validators.isValidPhone(phone)) {
+            throw new IllegalArgumentException("Invalid phone number");
+        }
         this.phone = phone;
     }
 
@@ -104,6 +105,9 @@ public class User implements Comparable<User> {
     }
 
     public void setLanguage(String language) {
+        if(!Validators.isValidLanguage(language)) {
+            throw new IllegalArgumentException("Invalid language option");
+        }
         this.language = language;
     }
 
@@ -134,6 +138,7 @@ public class User implements Comparable<User> {
     public String getTimezone() {
         return timezone;
     }
+
 
     public void setTimezone(String timezone) {
         this.timezone = timezone;

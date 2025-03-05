@@ -8,6 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -134,9 +135,11 @@ public class UserDAO {
                 if (rowsAffected > 0) {
                     // generate email html
                     String subject = "Reset Password";
-                    String message = "<img src='https://wacker.azurewebsites.net/images/lock.jpg' alt='Lock Image' style='width: 10em; margin-left: 5em;'>";
+                    String message = "<h2 style='color: black; margin-left: 5.3em;'>Doodle Dogs</h2>";
+                    message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: 5em;'>";
                     message += "<h2 style='color: black;'>FORGOT YOUR PASSWORD?</h2>";
                     message += "<p style='color: black;'>Don't worry! Just click this link to reset your password.</p>";
+
                     String appURL = "";
                     if (req.isSecure()) {
                         appURL = req.getServletContext().getInitParameter("appURLCloud");
@@ -211,4 +214,82 @@ public class UserDAO {
         }
         return false;
     }
+
+//    public static boolean update(String originalEmail, User newUser) {
+//        User existingUser = get(originalEmail);  // Fetching existing user by original email
+//
+//        try (Connection connection = getConnection();
+//             CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")
+//        ) {
+//            // Setting original values
+//            statement.setInt(1, existingUser.getUserId());
+//            statement.setString(2, existingUser.getFirstName());
+//            statement.setString(3, existingUser.getLastName());
+//            statement.setString(4, existingUser.getEmail());
+//            statement.setString(5, existingUser.getPhone());
+//            statement.setString(6, existingUser.getLanguage());
+//            statement.setString(7, existingUser.getStatus());
+//            statement.setString(8, existingUser.getPrivileges());
+//            statement.setString(9, existingUser.getTimezone());
+//
+//            // Convert Instant to SQL Date
+//            Instant instant = existingUser.getDateOfBirth();
+//            statement.setDate(10, Date.valueOf(instant.atZone(ZoneId.systemDefault()).toLocalDate()));
+//
+//            statement.setString(11, existingUser.getInterests());
+//
+//            // Setting new user values
+//            statement.setInt(12, newUser.getUserId());
+//            statement.setString(13, newUser.getFirstName()); // Correcting to use firstName for newUser
+//            statement.setString(14, newUser.getLastName());
+//            statement.setString(15, newUser.getEmail());
+//            statement.setString(16, newUser.getPhone());
+//            statement.setString(17, newUser.getLanguage());
+//            statement.setString(18, newUser.getStatus());
+//            statement.setString(19, newUser.getPrivileges());
+//            statement.setString(20, newUser.getTimezone());
+//
+//            // Convert Instant to SQL Date for new user
+//            Instant instant2 = newUser.getDateOfBirth();
+//            statement.setDate(21, Date.valueOf(instant2.atZone(ZoneId.systemDefault()).toLocalDate()));
+//
+//            statement.setString(22, newUser.getInterests());
+//
+//            // Execute and check the number of rows affected
+//            int rowsAffected = statement.executeUpdate();
+//            return rowsAffected == 1;  // Returns true if one row was updated
+//        } catch (SQLException e) {
+//            // Log and throw runtime exception with detailed error message for debugging
+//            throw new RuntimeException("Error updating user profile: " + e.getMessage(), e);
+//        }
+public static boolean update(String originalEmail, User newUser) {
+    User existingUser = get(originalEmail);
+    try (Connection connection = getConnection();
+         CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}") // Updated to include interests
+    ) {
+        statement.setInt(1, existingUser.getUserId());
+        statement.setString(2, existingUser.getFirstName());
+        statement.setString(3, existingUser.getLastName());
+        statement.setString(4, existingUser.getEmail());
+        statement.setString(5, existingUser.getPhone());
+        statement.setString(6, existingUser.getLanguage());
+        statement.setString(7, existingUser.getStatus());
+        statement.setString(8, existingUser.getPrivileges());
+        statement.setString(9, existingUser.getTimezone());
+        statement.setString(10, newUser.getFirstName());
+        statement.setString(11, newUser.getLastName());
+        statement.setString(12, newUser.getEmail());
+        statement.setString(13, newUser.getPhone());
+        statement.setString(14, newUser.getLanguage());
+        statement.setString(15, newUser.getStatus());
+        statement.setString(16, newUser.getPrivileges());
+        statement.setString(17, newUser.getTimezone());
+        statement.setString(18, newUser.getInterests());  // Set interests for the stored procedure
+
+        int rowsAffected = statement.executeUpdate();
+        return rowsAffected == 1;
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+}
 }
