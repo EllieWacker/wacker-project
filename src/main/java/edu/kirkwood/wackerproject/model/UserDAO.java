@@ -135,7 +135,7 @@ public class UserDAO {
                 if (rowsAffected > 0) {
                     // generate email html
                     String subject = "Reset Password";
-                    String message = "<h2 style='color: black; margin-left: 5.3em;'>Doodle Dogs</h2>";
+                    String message = "<h2 style='color: black; margin-left: 3.5em;'>Doodle Dogs</h2>";
                     message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: 5em;'>";
                     message += "<h2 style='color: black;'>FORGOT YOUR PASSWORD?</h2>";
                     message += "<p style='color: black;'>Don't worry! Just click this link to reset your password.</p>";
