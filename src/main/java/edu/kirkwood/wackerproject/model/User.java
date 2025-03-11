@@ -2,7 +2,6 @@ package edu.kirkwood.wackerproject.model;
 
 import edu.kirkwood.shared.Validators;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
@@ -18,13 +17,13 @@ public class User implements Comparable<User> {
     private String privileges;
     private Instant createdAt;
     private String timezone;
-    private Instant dateOfBirth;
+    private String favColor;
     private String interests;
 
     public User() {
     }
 
-    public User(int userId, String firstName, String lastName, String email, String phone, char[] password, String language, String status, String privileges, Instant createdAt, String timezone, Instant dateOfBirth, String interests) {
+    public User(int userId, String firstName, String lastName, String email, String phone, char[] password, String language, String status, String privileges, Instant createdAt, String timezone, String interests) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,7 +35,6 @@ public class User implements Comparable<User> {
         this.privileges = privileges;
         this.createdAt = createdAt;
         this.timezone = timezone;
-        this.dateOfBirth = dateOfBirth;
         this.interests = interests;
     }
 
@@ -144,12 +142,12 @@ public class User implements Comparable<User> {
         this.timezone = timezone;
     }
 
-    public Instant getDateOfBirth() {
-        return dateOfBirth;
+    public String getFavColor() {
+        return favColor;
     }
 
-    public void setDateOfBirth(Instant dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setFavColor(String favColor) {
+        this.favColor = favColor;
     }
 
     public String getInterests() {

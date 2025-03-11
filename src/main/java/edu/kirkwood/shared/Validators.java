@@ -75,12 +75,4 @@ public class Validators {
         Matcher matcher = pattern.matcher(language);
         return matcher.matches();
     }
-
-    //source: chatgpt
-    public static boolean isValidISBN(String isbn) {
-        String regex = "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(isbn);
-        return matcher.matches();
-    }
 }

@@ -4,7 +4,6 @@ package edu.kirkwood.wackerproject.model;
 import edu.kirkwood.shared.email.EmailThread;
 import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
-
 import java.sql.*;
 import java.time.Duration;
 import java.time.Instant;
@@ -12,13 +11,14 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import static edu.kirkwood.shared.MySQL_Connect.getConnection;
 
 public class UserDAO {
     public static void main(String[] args) {
-       // getAll().forEach(System.out::println);
-       // System.out.println(get("delete-me2@example.com"));
+        // getAll().forEach(System.out::println);
+        // System.out.println(get("delete-me2@example.com"));
         User user = new User();
         user.setEmail("test1@test.com");
         user.setPassword("P@ssw0rd".toCharArray());
@@ -26,13 +26,14 @@ public class UserDAO {
         user.setPrivileges("Admin");
         add(user);
     }
+
     public static List<User> getAll() {
 
         List<User> list = new ArrayList<>();
         try (Connection connection = getConnection()) {
             CallableStatement cstmt = connection.prepareCall("{call sp_get_all_users()}");
             ResultSet rs = cstmt.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 int userId = rs.getInt("user_id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
@@ -44,13 +45,10 @@ public class UserDAO {
                 String privileges = rs.getString("privileges");
                 Instant createdAt = rs.getTimestamp("created_at").toInstant();
                 String timezone = rs.getString("timezone");
-                Timestamp timestamp = rs.getTimestamp("date_of_birth");
-                Instant dateOfBirth = (timestamp != null) ? timestamp.toInstant() : null;                String interests = rs.getString("interests");
+                String interests = rs.getString("interests");
 
-                User user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, createdAt, timezone, dateOfBirth, interests);
+                User user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, createdAt, timezone, interests);
                 list.add(user);
-
-
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,13 +74,8 @@ public class UserDAO {
                             String privileges = resultSet.getString("privileges");
                             Instant created_at = resultSet.getTimestamp("created_at").toInstant();
                             String timezone = resultSet.getString("timezone");
-                            Instant dateOfBirth = null;
-                            Timestamp dobTimestamp = resultSet.getTimestamp("date_of_birth");
-                            if (dobTimestamp != null) {
-                                dateOfBirth = dobTimestamp.toInstant();
-                            }
                             String interests = resultSet.getString("interests");
-                            user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, created_at, timezone, dateOfBirth, interests);
+                            user = new User(userId, firstName, lastName, email, phone, password, language, status, privileges, created_at, timezone, interests);
                         }
                     }
                 }
@@ -94,8 +87,8 @@ public class UserDAO {
     }
 
     public static boolean add(User user) {
-        try(Connection connection = getConnection();
-            CallableStatement statement = connection.prepareCall("{CALL sp_add_user(?,?,?,?)}");
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall("{CALL sp_add_user(?,?,?,?)}");
         ) {
             statement.setString(1, user.getEmail());
             statement.setString(2, BCrypt.hashpw(String.valueOf(user.getPassword()), BCrypt.gensalt(12)));
@@ -103,20 +96,20 @@ public class UserDAO {
             statement.setString(4, user.getPrivileges());
             int rowsAdded = statement.executeUpdate();
             return rowsAdded == 1;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static boolean updateStatus(String email, String newStatus) {
-        try(Connection connection = getConnection();
-            CallableStatement statement = connection.prepareCall("{CALL sp_update_user_status(?,?)}")){
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall("{CALL sp_update_user_status(?,?)}")) {
 
             statement.setString(1, email);
             statement.setString(2, newStatus);
             int rowsAdded = statement.executeUpdate();
             return rowsAdded == 1;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException("Error updating user status", e);
         }
     }
@@ -159,7 +152,7 @@ public class UserDAO {
                         throw new RuntimeException(e);
                     }
                     String errorMessage = emailThread.getErrorMessage();
-                    if(errorMessage == null || errorMessage.isEmpty()) {
+                    if (errorMessage == null || errorMessage.isEmpty()) {
                         return "If there's an account associated with the email entered, we will send a password reset link.";
                     } else {
                         return "Sorry, we couldn't process your password reset. Try again.";
@@ -184,7 +177,7 @@ public class UserDAO {
                 Instant created_at = resultSet.getTimestamp("created_at").toInstant();
                 Duration duration = Duration.between(created_at, now);
                 long minutesElapsed = duration.toMinutes();
-                if(minutesElapsed < 30) {
+                if (minutesElapsed < 30) {
                     email = resultSet.getString("email");
                 }
                 int id = resultSet.getInt("id");
@@ -215,81 +208,52 @@ public class UserDAO {
         return false;
     }
 
-//    public static boolean update(String originalEmail, User newUser) {
-//        User existingUser = get(originalEmail);  // Fetching existing user by original email
-//
-//        try (Connection connection = getConnection();
-//             CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")
-//        ) {
-//            // Setting original values
-//            statement.setInt(1, existingUser.getUserId());
-//            statement.setString(2, existingUser.getFirstName());
-//            statement.setString(3, existingUser.getLastName());
-//            statement.setString(4, existingUser.getEmail());
-//            statement.setString(5, existingUser.getPhone());
-//            statement.setString(6, existingUser.getLanguage());
-//            statement.setString(7, existingUser.getStatus());
-//            statement.setString(8, existingUser.getPrivileges());
-//            statement.setString(9, existingUser.getTimezone());
-//
-//            // Convert Instant to SQL Date
-//            Instant instant = existingUser.getDateOfBirth();
-//            statement.setDate(10, Date.valueOf(instant.atZone(ZoneId.systemDefault()).toLocalDate()));
-//
-//            statement.setString(11, existingUser.getInterests());
-//
-//            // Setting new user values
-//            statement.setInt(12, newUser.getUserId());
-//            statement.setString(13, newUser.getFirstName()); // Correcting to use firstName for newUser
-//            statement.setString(14, newUser.getLastName());
-//            statement.setString(15, newUser.getEmail());
-//            statement.setString(16, newUser.getPhone());
-//            statement.setString(17, newUser.getLanguage());
-//            statement.setString(18, newUser.getStatus());
-//            statement.setString(19, newUser.getPrivileges());
-//            statement.setString(20, newUser.getTimezone());
-//
-//            // Convert Instant to SQL Date for new user
-//            Instant instant2 = newUser.getDateOfBirth();
-//            statement.setDate(21, Date.valueOf(instant2.atZone(ZoneId.systemDefault()).toLocalDate()));
-//
-//            statement.setString(22, newUser.getInterests());
-//
-//            // Execute and check the number of rows affected
-//            int rowsAffected = statement.executeUpdate();
-//            return rowsAffected == 1;  // Returns true if one row was updated
-//        } catch (SQLException e) {
-//            // Log and throw runtime exception with detailed error message for debugging
-//            throw new RuntimeException("Error updating user profile: " + e.getMessage(), e);
-//        }
-public static boolean update(String originalEmail, User newUser) {
-    User existingUser = get(originalEmail);
-    try (Connection connection = getConnection();
-         CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}") // Updated to include interests
-    ) {
-        statement.setInt(1, existingUser.getUserId());
-        statement.setString(2, existingUser.getFirstName());
-        statement.setString(3, existingUser.getLastName());
-        statement.setString(4, existingUser.getEmail());
-        statement.setString(5, existingUser.getPhone());
-        statement.setString(6, existingUser.getLanguage());
-        statement.setString(7, existingUser.getStatus());
-        statement.setString(8, existingUser.getPrivileges());
-        statement.setString(9, existingUser.getTimezone());
-        statement.setString(10, newUser.getFirstName());
-        statement.setString(11, newUser.getLastName());
-        statement.setString(12, newUser.getEmail());
-        statement.setString(13, newUser.getPhone());
-        statement.setString(14, newUser.getLanguage());
-        statement.setString(15, newUser.getStatus());
-        statement.setString(16, newUser.getPrivileges());
-        statement.setString(17, newUser.getTimezone());
-        statement.setString(18, newUser.getInterests());  // Set interests for the stored procedure
 
-        int rowsAffected = statement.executeUpdate();
-        return rowsAffected == 1;
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
+
+
+    public static boolean delete(User user) {
+        try (Connection connection = getConnection()) {
+            CallableStatement statement = connection.prepareCall("{CALL sp_delete_user(?)}");
+            statement.setInt(1, user.getUserId());
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-}
+
+
+    public static boolean update(String originalEmail, User newUser) {
+        User existingUser = get(originalEmail);
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")
+        ) {
+            statement.setInt(1, existingUser.getUserId());
+            statement.setString(2, existingUser.getFirstName());
+            statement.setString(3, existingUser.getLastName());
+            statement.setString(4, existingUser.getEmail());
+            statement.setString(5, existingUser.getPhone());
+            statement.setString(6, existingUser.getLanguage());
+            statement.setString(7, existingUser.getStatus());
+            statement.setString(8, existingUser.getPrivileges());
+            statement.setString(9, existingUser.getTimezone());
+            statement.setString(10, existingUser.getInterests());
+            statement.setString(11, newUser.getFirstName());
+            statement.setString(12, newUser.getLastName());
+            statement.setString(13, newUser.getEmail());
+            statement.setString(14, newUser.getPhone());
+            statement.setString(15, newUser.getLanguage());
+            statement.setString(16, newUser.getStatus());
+            statement.setString(17, newUser.getPrivileges());
+            statement.setString(18, newUser.getTimezone());
+            statement.setString(19, newUser.getInterests());
+
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Prints error details
+            throw new RuntimeException(e);
+        }
+    }
+
 }

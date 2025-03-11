@@ -23,7 +23,7 @@
                                 <!-- First name -->
                                 <div class="col-md-6">
                                     <label class="form-label" for="firstName">First Name</label>
-                                    <input class="<c:if test="${not empty firstNameError}">is-invalid</c:if> form-control" type="text" id="firstName" name="firstName" value="${sessionScope.activeUser.firstName}">
+                                    <input class="<c:if test="${not empty firstNameError}">is-invalid</c:if> form-control" type="text" id="firstName" name="firstName" value="${fn:escapeXml(sessionScope.activeUser.firstName)}">
                                     <c:if test="${not empty firstNameError}"><div class="invalid-feedback">${firstNameError}</div></c:if>
                                 </div>
 
@@ -66,7 +66,6 @@
                                     <input type="text" class="<c:if test="${not empty interestsError}">is-invalid</c:if> form-control" id="interests" name="interests" value="${not empty interests ? interests : sessionScope.activeUser.interests}">
                                     <c:if test="${not empty interestsError }"><div class="invalid-feedback">${interestsError}</div></c:if>
                                 </div>
-
                                 <!-- Save button -->
                                 <div class="d-sm-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary mb-0">Save changes</button>

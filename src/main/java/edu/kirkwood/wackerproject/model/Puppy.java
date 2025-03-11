@@ -8,7 +8,7 @@ public class Puppy {
     private String medicalRecordID;
     private String image;
     private String gender;
-    private String adopted	;
+    private boolean adopted	;
     private boolean microchip	;
     private double price;
     private String breedDescription;
@@ -16,7 +16,7 @@ public class Puppy {
     public Puppy() {
     }
 
-    public Puppy(String puppyID, String breedID, String litterID, String medicalRecordID, String image, String gender, String adopted, boolean microchip, double price, String breedDescription) {
+    public Puppy(String puppyID, String breedID, String litterID, String medicalRecordID, String image, String gender, boolean adopted, boolean microchip, double price, String breedDescription) {
         this.puppyID = puppyID;
         this.breedID = breedID;
         this.litterID = litterID;
@@ -77,15 +77,15 @@ public class Puppy {
         this.gender = gender;
     }
 
-    public String getAdopted() {
+    public boolean getAdopted() {
         return adopted;
     }
 
-    public void setAdopted(String adopted) {
+    public void setAdopted(boolean adopted) {
         this.adopted = adopted;
     }
 
-    public boolean isMicrochip() {
+    public boolean getMicrochip() {
         return microchip;
     }
 

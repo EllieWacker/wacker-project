@@ -10,11 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 
 @WebServlet("/edit-profile")
 public class EditProfile extends HttpServlet {
@@ -44,6 +44,7 @@ public class EditProfile extends HttpServlet {
         String phone = req.getParameter("phone");
         String language = req.getParameter("language");
         String interests = req.getParameter("interests");
+        String favColor = req.getParameter("favColor");
         req.setAttribute("email", email);
         req.setAttribute("phone", phone);
 
@@ -93,6 +94,11 @@ public class EditProfile extends HttpServlet {
             user.setInterests(interests);
         }
 
+        if(favColor != null && !favColor.equals(user.getFavColor())) {
+            user.setFavColor(favColor);
+        }
+
+
         if(!errorFound) {
             boolean userUpdated = false;
             try {
@@ -110,13 +116,3 @@ public class EditProfile extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/edit-profile.jsp").forward(req, resp);
     }
 }
-/* try {
-            dateOfBirth = LocalDate.parse(req.getParameter("dateOfBirth"));
-            Instant instantDateOfBirth = dateOfBirth.atStartOfDay().toInstant(ZoneOffset.UTC);
-            user.setDateOfBirth(instantDateOfBirth);
-        } catch (DateTimeParseException e) {
-            errorFound = true;
-            req.setAttribute("dateOfBirthError", "Invalid date format.");
-        }
-
-        */
