@@ -26,7 +26,6 @@
                             <th scope="col">Privileges</th>
                             <th scope="col">Created At</th>
                             <th scope="col">Timezone</th>
-                            <th scope="col">Date of Birth</th>
                             <th scope="col">Interests</th>
                         </tr>
                         </thead>
@@ -46,7 +45,6 @@
                             <td>${user.privileges}</td>
                             <td>${user.createdAt}</td>
                             <td>${user.timezone}</td>
-                            <td>${user.dateOfBirth}</td>
                             <td>${user.interests}</td>
                             </c:forEach>
                         </tbody>

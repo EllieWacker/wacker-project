@@ -134,6 +134,51 @@ public class PuppyDAO {
         }
     }
 
+    public static boolean deletePuppy(Puppy puppy) {
+        try (Connection connection = getConnection()) {
+            CallableStatement statement = connection.prepareCall("{CALL sp_delete_puppy(?)}");
+            statement.setString(1, puppy.getPuppyID());
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<Puppy> getPuppiesByBreed(String breed) {
+        List<Puppy> puppyList = new ArrayList<>();
+        try (Connection connection = getConnection()) {
+            // Calling the stored procedure to get puppies by breed description
+            CallableStatement cstmt = connection.prepareCall("{call sp_get_puppies_by_breedID(?)}");
+            cstmt.setString(1, breed);  // Set the breed parameter (name of breed)
+
+            ResultSet rs = cstmt.executeQuery();
+
+            if (!rs.isBeforeFirst()) {
+                System.out.println("No puppies found.");
+            } else {
+                while (rs.next()) {
+                    String puppyID = rs.getString("puppy_id");
+                    String breedID = rs.getString("breed_id");
+                    String litterID = rs.getString("litter_id");
+                    String medicalRecordID = rs.getString("medical_record_id");
+                    String image = rs.getString("image");
+                    String gender = rs.getString("gender");
+                    boolean adopted = rs.getBoolean("adopted");
+                    boolean microchip = rs.getBoolean("microchip");
+                    double price = rs.getDouble("price");
+                    String breedDescription = rs.getString("breed_description");
+
+                    Puppy puppy = new Puppy(puppyID, breedID, litterID, medicalRecordID, image, gender, adopted, microchip, price, breedDescription);
+                    puppyList.add(puppy);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return puppyList;
+    }
+
 
 
 }

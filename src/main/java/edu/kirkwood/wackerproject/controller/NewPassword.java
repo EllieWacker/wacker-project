@@ -61,8 +61,9 @@ public class NewPassword extends HttpServlet {
                 if(passwordUpdated) {
                     // Send confirmation email
                     String subject = "New Password Created";
-                    String message = "<h2>New Password Created</h2>";
-                    message += "<p>Your password has changed. If you suspect that someone else changed your password, please reset it with this link:</p>";
+                    String message = "<h2 style='color: black;'>New Password Created</h2>";
+                    message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: 5em;'>";
+                    message += "<p style='color: black;>Your password has changed. If you suspect that someone else changed your password, please reset it with this link:</p>";
                     String appURL = "";
                     if (req.isSecure()) {
                         appURL = req.getServletContext().getInitParameter("appURLCloud");

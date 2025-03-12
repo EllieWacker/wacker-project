@@ -17,8 +17,6 @@ import static edu.kirkwood.shared.MySQL_Connect.getConnection;
 
 public class UserDAO {
     public static void main(String[] args) {
-        // getAll().forEach(System.out::println);
-        // System.out.println(get("delete-me2@example.com"));
         User user = new User();
         user.setEmail("test1@test.com");
         user.setPassword("P@ssw0rd".toCharArray());
@@ -51,6 +49,7 @@ public class UserDAO {
                 list.add(user);
             }
         } catch (SQLException e) {
+            e.printStackTrace();  // Print the stack trace for detailed error information
             throw new RuntimeException(e);
         }
         return list;
@@ -128,7 +127,7 @@ public class UserDAO {
                 if (rowsAffected > 0) {
                     // generate email html
                     String subject = "Reset Password";
-                    String message = "<h2 style='color: black; margin-left: 3.5em;'>Doodle Dogs</h2>";
+                    String message = "<img src='https://wacker.azurewebsites.net/images/dogLogo.png' alt='Logo' style='width: 10em; margin-left: 5em;'>";
                     message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: 5em;'>";
                     message += "<h2 style='color: black;'>FORGOT YOUR PASSWORD?</h2>";
                     message += "<p style='color: black;'>Don't worry! Just click this link to reset your password.</p>";

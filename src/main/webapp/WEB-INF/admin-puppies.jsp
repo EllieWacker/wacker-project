@@ -33,7 +33,7 @@
               <tr>
                 <td>
                   <a href="update-puppy?puppyID=${puppy.puppyID}" class="btn btn-sm btn-outline-primary">Edit</a>
-                  <a href="delete-puppy?puppy_id=${puppy.puppyID}" class="btn btn-sm btn-outline-danger">Delete</a>
+                  <a href="delete-puppy?puppyID=${puppy.puppyID}" class="btn btn-sm btn-outline-danger">Delete</a>
                 </td>
                 <td>${puppy.puppyID}</td>
                 <td>${puppy.breedID}</td>

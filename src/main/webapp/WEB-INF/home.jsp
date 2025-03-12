@@ -16,7 +16,7 @@
                 <img src="${pageContext.request.contextPath}${fn:replace(puppy2.image, '^/', '')}" alt="Dog Image" class="rounded-circle" width="140" height="140" style="object-fit: cover;">
                 <h2 class="fw-normal">${puppy2.breedID} Puppies</h2>
                 <p>${puppy2.breedDescription}</p>
-                <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+                <p><a class="btn btn-secondary" href="${appURL}/view-puppies?breed=Cockapoo">View Aussiedoodles &raquo;</a></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <img src="${pageContext.request.contextPath}${fn:replace(puppy3.image, '^/', '')}" alt="Dog Image" style="object-fit: cover;" class="rounded-circle" width="140" height="140">
