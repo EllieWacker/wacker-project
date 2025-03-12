@@ -48,7 +48,7 @@
                                     <c:if test="${not empty phoneError }"><div class="invalid-feedback">${phoneError}</div></c:if>
                                 </div>
 
-                                <!-- Select option -->
+
                                 <div class="col-md-6">
                                     <!-- Language Preference -->
                                     <label class="form-label" for="language">Language</label>
@@ -66,6 +66,14 @@
                                     <input type="text" class="<c:if test="${not empty interestsError}">is-invalid</c:if> form-control" id="interests" name="interests" value="${not empty interests ? interests : sessionScope.activeUser.interests}">
                                     <c:if test="${not empty interestsError }"><div class="invalid-feedback">${interestsError}</div></c:if>
                                 </div>
+
+                                <!-- Timezone -->
+                                <div class="col-md-6">
+                                    <label class="form-label" for="timezone">Timezone</label>
+                                    <input type="text" class="<c:if test="${not empty timezoneError}">is-invalid</c:if> form-control" id="timezone" name="timezone" value="${not empty timezone ? timezone : sessionScope.activeUser.timezone}">
+                                    <c:if test="${not empty timezoneError }"><div class="invalid-feedback">${timezoneError}</div></c:if>
+                                </div>
+
                                 <!-- Save button -->
                                 <div class="d-sm-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary mb-0">Save changes</button>

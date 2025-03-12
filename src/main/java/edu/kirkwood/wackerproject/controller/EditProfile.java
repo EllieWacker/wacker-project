@@ -44,7 +44,7 @@ public class EditProfile extends HttpServlet {
         String phone = req.getParameter("phone");
         String language = req.getParameter("language");
         String interests = req.getParameter("interests");
-        String favColor = req.getParameter("favColor");
+        String timezone = req.getParameter("timezone");
         req.setAttribute("email", email);
         req.setAttribute("phone", phone);
 
@@ -94,8 +94,15 @@ public class EditProfile extends HttpServlet {
             user.setInterests(interests);
         }
 
-        if(favColor != null && !favColor.equals(user.getFavColor())) {
-            user.setFavColor(favColor);
+        try {
+            if(timezone != null && !timezone.equals(user.getTimezone())) {
+                user.setTimezone(timezone);
+            }
+        } catch(IllegalArgumentException e) {
+            errorFound = true;
+            req.setAttribute("timezoneError", e.getMessage());
+            req.setAttribute("timezone", timezone);
+
         }
 
 

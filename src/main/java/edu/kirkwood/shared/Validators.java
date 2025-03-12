@@ -75,4 +75,10 @@ public class Validators {
         Matcher matcher = pattern.matcher(language);
         return matcher.matches();
     }
+    public static boolean isValidTimezone(String timezone) {
+        String regex = "^(Africa|America|Antarctica|Asia|Australia|Europe|Indian|Pacific)\\/([A-Za-z_]+(?:\\/([A-Za-z0-9_-]+))*)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(timezone);
+        return matcher.matches();
+    }
 }

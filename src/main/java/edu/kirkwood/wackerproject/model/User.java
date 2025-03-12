@@ -139,6 +139,12 @@ public class User implements Comparable<User> {
 
 
     public void setTimezone(String timezone) {
+        if (timezone == null || timezone.isEmpty()) {
+            throw new IllegalArgumentException("Timezone cannot be empty.");
+        }
+        if(!Validators.isValidTimezone(timezone)) {
+            throw new IllegalArgumentException("Invalid timezone");
+        }
         this.timezone = timezone;
     }
 
