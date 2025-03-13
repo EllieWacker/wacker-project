@@ -13,16 +13,21 @@
                         />
 
                         <strong>${puppy.puppyID}</strong><br />
-                            ${puppy.price}<br />
-                        <small>${puppy.gender}</small>
+                            $${puppy.price}<br />
+                        <small>${puppy.gender}</small><br />
+                        <small>${puppy.adopted == true ? 'Adopted' : 'Available'}</small>
 
-                        <div slot="footer">
-                            <sl-button variant="primary" pill>Adopt</sl-button>
-                        </div>
+                        <c:choose>
+                            <c:when test="${puppy.adopted eq false}">
+                                <div slot="footer">
+                                    <sl-button variant="primary" pill>Adopt</sl-button>
+                                </div>
+                            </c:when>
+                        </c:choose>
                     </sl-card>
 
                 </div>
             </c:forEach>
-        </div><%-- Closing row --%>
+        </div>
     </div>
 </div>

@@ -25,9 +25,9 @@
                 <div class="col-md-9">
                     <label for="breedID" class="form-label">Breed</label>
                     <select class="form-control ${breedIDError != null ? 'is-invalid' : ''}" id="breedID" name="breedID">
-                        <option value="aussiedoodle" ${puppy.breedID == 'aussiedoodle' ? 'selected' : ''}>Aussiedoodle</option>
-                        <option value="goldendoodle" ${puppy.breedID == 'goldendoodle' ? 'selected' : ''}>Goldendoodle</option>
-                        <option value="cockapoo" ${puppy.breedID == 'cockapoo' ? 'selected' : ''}>Cockapoo</option>
+                        <option value="Mini Aussiedoodle" ${puppy.breedID == 'Mini Aussiedoodle' ? 'selected' : ''}>Mini Aussiedoodle</option>
+                        <option value="Mini Goldendoodle" ${puppy.breedID == 'Mini Goldendoodle' ? 'selected' : ''}>Mini Goldendoodle</option>
+                        <option value="Cockapoo" ${puppy.breedID == 'Cockapoo' ? 'selected' : ''}>Cockapoo</option>
                     </select>
                     <c:if test="${not empty breedIDError}">
                         <div class="invalid-feedback">${breedIDError}</div>
@@ -43,13 +43,19 @@
                     </c:if>
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <label for="medicalRecordID" class="form-label">Medical Record ID</label>
-                    <input type="text" class="form-control ${medicalRecordIDError != null ? 'is-invalid' : ''}" id="medicalRecordID" name="medicalRecordID" value="${puppy.medicalRecordID}">
+                    <select class="form-control ${medicalRecordIDError != null ? 'is-invalid' : ''}" id="medicalRecordID" name="medicalRecordID">
+                        <option value="AmyMeyer1" ${puppy != null && 'AmyMeyer1'.equalsIgnoreCase(puppy.medicalRecordID) ? 'selected' : ''}>Deworming</option>
+                        <option value="CarterSmith1" ${puppy != null && 'CarterSmith1'.equalsIgnoreCase(puppy.medicalRecordID) ? 'selected' : ''}>Essential Vaccinations and Deworming</option>
+                        <option value="LukeWacker1" ${puppy != null && 'LukeWacker1'.equalsIgnoreCase(puppy.medicalRecordID) ? 'selected' : ''}>All Vaccinations and Deworming</option>
+                    </select>
                     <c:if test="${not empty medicalRecordIDError}">
                         <div class="invalid-feedback">${medicalRecordIDError}</div>
                     </c:if>
                 </div>
+
+
 
                 <div class="col-md-4">
                     <label for="image" class="form-label">Image</label>
@@ -94,11 +100,9 @@
                     </c:if>
                 </div>
 
-
-
                 <div class="col-md-4">
                     <label for="price" class="form-label">Price</label>
-                    <input type="number" step="0.01" value="${puppy.price != null ? puppy.price : 100}" class="form-control ${priceError != null ? 'is-invalid' : ''}" id="price" name="price">
+                    <input type="number" step="0.01" class="form-control ${priceError != null ? 'is-invalid' : ''}" id="price" name="price" value="${puppy.price}">
                     <c:if test="${not empty priceError}">
                         <div class="invalid-feedback">${priceError}</div>
                     </c:if>

@@ -61,7 +61,7 @@ public class PuppyDAO {
             return rowsAffected == 1;
         } catch (SQLException e) {
             System.err.println("Error adding puppy: " + e.getMessage());
-            e.printStackTrace(); // Log full stack trace
+            e.printStackTrace();
             return false;
         }
     }
@@ -72,7 +72,6 @@ public class PuppyDAO {
             CallableStatement cstmt = connection.prepareCall("{call sp_get_all_puppies()}");
             ResultSet rs = cstmt.executeQuery();
 
-            // Debug: Check if the result set is empty
             if (!rs.isBeforeFirst()) {
                 System.out.println("No puppies found.");
             }
@@ -124,12 +123,12 @@ public class PuppyDAO {
             statement.setBoolean(17, newPuppy.getAdopted());
             statement.setBoolean(18, newPuppy.getMicrochip());
             statement.setDouble(19, newPuppy.getPrice());
-            statement.setString(20, newPuppy.getBreedDescription()); // This line was missing
+            statement.setString(20, newPuppy.getBreedDescription());
 
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException e) {
-            e.printStackTrace(); // Print the error for debugging
+            e.printStackTrace();
             return false;
         }
     }
@@ -148,13 +147,12 @@ public class PuppyDAO {
     public static List<Puppy> getPuppiesByBreed(String breed) {
         List<Puppy> puppyList = new ArrayList<>();
         try (Connection connection = getConnection()) {
-            // Calling the stored procedure to get puppies by breed description
             CallableStatement cstmt = connection.prepareCall("{call sp_get_puppies_by_breedID(?)}");
-            cstmt.setString(1, breed);  // Set the breed parameter (name of breed)
+            cstmt.setString(1, breed);
 
             ResultSet rs = cstmt.executeQuery();
 
-            if (!rs.isBeforeFirst()) {
+            if (!rs.isBeforeFirst()) { // if there are no results in the result set
                 System.out.println("No puppies found.");
             } else {
                 while (rs.next()) {

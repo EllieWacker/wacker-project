@@ -1,8 +1,5 @@
 package edu.kirkwood.wackerproject.controller;
-import edu.kirkwood.wackerproject.model.Puppy;
-import edu.kirkwood.wackerproject.model.PuppyDAO;
-import edu.kirkwood.wackerproject.model.User;
-import edu.kirkwood.wackerproject.model.UserDAO;
+import edu.kirkwood.wackerproject.model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,11 +7,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/add-puppy")
 public class AdminAddDog extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Litter> litters = LitterDAO.getAllLitters();
+        if (litters == null || litters.isEmpty()) {
+            System.out.println("No litters found");
+        } else {
+            req.setAttribute("litters", litters);
+        }
+
         req.getRequestDispatcher("WEB-INF/add-puppy.jsp").forward(req, resp);
     }
 
@@ -29,7 +34,7 @@ public class AdminAddDog extends HttpServlet {
         String gender = req.getParameter("gender");
         boolean adopted = Boolean.parseBoolean(req.getParameter("adopted"));
         boolean microchip = Boolean.parseBoolean(req.getParameter("microchip"));
-        double price = Double.parseDouble(req.getParameter("price"));
+        String priceStr = req.getParameter("price");
         String breedDescription = req.getParameter("breedDescription");
 
         req.setAttribute("puppyID", puppyID);
@@ -40,8 +45,14 @@ public class AdminAddDog extends HttpServlet {
         req.setAttribute("gender", gender);
         req.setAttribute("adopted", adopted);
         req.setAttribute("microchip", microchip);
-        req.setAttribute("price", price);
         req.setAttribute("breedDescription", breedDescription);
+
+        List<Litter> litters = LitterDAO.getAllLitters();
+        if (litters == null || litters.isEmpty()) {
+            System.out.println("No litters found");
+        } else {
+            req.setAttribute("litters", litters);
+        }
 
         Puppy puppy = new Puppy();
         boolean validationError = false;
@@ -91,7 +102,7 @@ public class AdminAddDog extends HttpServlet {
 
         if(medicalRecordID == null || medicalRecordID.equals("")) {
             validationError = true;
-            req.setAttribute("medicalRecordIDError", "You must enter a medicalRecord ID");
+            req.setAttribute("medicalRecordIDError", "You must pick a medicalRecord ID");
         }
         else{
             try {
@@ -143,16 +154,26 @@ public class AdminAddDog extends HttpServlet {
             req.setAttribute("microchipError", e.getMessage());
         }
 
-        price = 0;
-        try {
-            if (price < 0) {
-                throw new IllegalArgumentException("Price cannot be negative.");
+        double price = 0;
+
+
+        if (priceStr != null && !priceStr.isEmpty()) {
+            try {
+                price = Double.parseDouble(priceStr);
+                if (price <= 0) {
+                    validationError = true;
+                    req.setAttribute("priceError", "Price cannot be 0 or less.");
+                }
+            } catch (NumberFormatException e) {
+                validationError = true;
+                req.setAttribute("priceError", "Invalid price format.");
             }
-            puppy.setPrice(price);
-        } catch (IllegalArgumentException e) {
+        } else {
             validationError = true;
-            req.setAttribute("priceError", e.getMessage());
+            req.setAttribute("priceError", "Price is required.");
         }
+        req.setAttribute("price", price);
+        puppy.setPrice(price);
 
         try {
             puppy.setBreedDescription(breedDescription);

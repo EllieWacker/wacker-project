@@ -18,27 +18,41 @@
         <div class="col-md-9">
             <label for="breedID" class="form-label">Breed</label>
             <select class="form-control <c:if test="${not empty breedIDError}">is-invalid</c:if>" id="breedID" name="breedID">
-            <option value="aussiedoodle" <c:if test="${empty breedID or breedID == 'aussiedoodle'}">selected</c:if>>Aussiedoodle</option>
-            <option value="goldendoodle" <c:if test="${breedID == 'goldendoodle'}">selected</c:if>>Goldendoodle</option>
-            <option value="cockapoo" <c:if test="${breedID == 'cockapoo'}">selected</c:if>>Cockapoo</option>
+                <option value="Mini Aussiedoodle" <c:if test="${empty breedID or breedID == 'Mini Aussiedoodle'}">selected</c:if>>Mini Aussiedoodle</option>
+                <option value="Mini Goldendoodle" <c:if test="${breedID == 'Mini Goldendoodle'}">selected</c:if>>Mini Goldendoodle</option>
+                <option value="Cockapoo" <c:if test="${breedID == 'Cockapoo'}">selected</c:if>>Cockapoo</option>
             </select>
             <c:if test="${not empty breedIDError}">
                 <div class="invalid-feedback">${breedIDError}</div>
             </c:if>
         </div>
 
+
         <div class="col-md-4">
             <label for="litterID" class="form-label">Litter</label>
-            <input type="text" class="form-control <c:if test="${not empty litterIDError}">is-invalid</c:if>" id="litterID" name="litterID" value="${litterID}">
-            <c:if test="${not empty litterIDError}"><div class="invalid-feedback">${litterIDError}</div></c:if>
+            <select class="form-control ${litterIDError != null ? 'is-invalid' : ''}" id="litterID" name="litterID">
+                <c:forEach var="litter" items="${litters}">
+                    <option value="${litter.litterID}" ${litterID == litter.litterID ? 'selected' : ''}>${litter.litterID}</option>
+                </c:forEach>
+            </select>
+            <c:if test="${not empty litterIDError}">
+                <div class="invalid-feedback">${litterIDError}</div>
+            </c:if>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-4">
             <label for="medicalRecordID" class="form-label">Medical Record ID</label>
-            <input type="text" class="form-control <c:if test="${not empty medicalRecordIDError}">is-invalid</c:if>" id="medicalRecordID" name="medicalRecordID" value="${medicalRecordID}">
-            <c:if test="${not empty medicalRecordIDError}"><div class="invalid-feedback">${medicalRecordIDError}</div></c:if>
-
+            <select class="form-control <c:if test="${not empty medicalRecordIDError}">is-invalid</c:if>" id="medicalRecordID" name="medicalRecordID">
+                <option value="AmyMeyer1" <c:if test="${empty medicalRecordID or medicalRecordID == 'AmyMeyer1'}">selected</c:if>>Deworming</option>
+                <option value="CarterSmith1" <c:if test="${medicalRecordID == 'CarterSmith1'}">selected</c:if>>Essential Vaccinations and Deworming</option>
+                <option value="LukeWacker1" <c:if test="${medicalRecordID == 'LukeWacker1'}">selected</c:if>>All Vaccinations and Deworming</option>
+            </select>
+            <c:if test="${not empty medicalRecordIDError}">
+                <div class="invalid-feedback">${medicalRecordIDError}</div>
+            </c:if>
         </div>
+
+
         <div class="col-md-4">
             <label for="image" class="form-label">Image</label>
             <input type="text" class="form-control <c:if test="${not empty imageError}">is-invalid</c:if>" id="image" name="image" value="${image}">
@@ -84,9 +98,14 @@
 
         <div class="col-md-4">
             <label for="price" class="form-label">Price</label>
-            <input type="number" step="0.01" content="2.32" value="${not empty price ? price : '100'}" class="form-control <c:if test="${not empty priceError}">is-invalid</c:if>" id="price" name="price" value="${price}">
-            <c:if test="${not empty priceError}"><div class="invalid-feedback">${priceError}</div></c:if>
+            <input type="number" step="0.01"
+                   class="form-control ${not empty priceError ? 'is-invalid' : ''}"
+                   id="price" name="price" value="${price}">
+            <c:if test="${not empty priceError}">
+                <div class="invalid-feedback">${priceError}</div>
+            </c:if>
         </div>
+
 
         <div class="col-md-4">
             <label for="breedDescription" class="form-label">Breed Description</label>

@@ -23,14 +23,14 @@ public class DeletePuppy extends HttpServlet {
 
         if (puppyID == null || puppyID.isEmpty()) {
             session.setAttribute("flashMessageWarning", "Invalid puppy ID.");
-            resp.sendRedirect(req.getContextPath() + "/puppy-list");  // Redirect to the list of puppies
+            resp.sendRedirect(req.getContextPath() + "/puppy-list");
             return;
         }
 
         Puppy puppyFromDatabase = PuppyDAO.getPuppy(puppyID);
         if (puppyFromDatabase == null) {
             session.setAttribute("flashMessageWarning", "Puppy not found.");
-            resp.sendRedirect(req.getContextPath() + "/puppy-list");  // Redirect to the list of puppies
+            resp.sendRedirect(req.getContextPath() + "/puppy-list");
             return;
         }
 
@@ -57,7 +57,7 @@ public class DeletePuppy extends HttpServlet {
             boolean deleted = PuppyDAO.deletePuppy(puppyFromDatabase);
             if (deleted) {
                 session.setAttribute("flashMessageSuccess", "Puppy has been successfully deleted.");
-                resp.sendRedirect(req.getContextPath() + "/puppies");  // Redirect to the list of puppies
+                resp.sendRedirect(req.getContextPath() + "/puppies");
                 return;
             } else {
                 session.setAttribute("flashMessageDanger", "An error occurred while deleting puppy.");

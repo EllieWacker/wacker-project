@@ -23,8 +23,8 @@ public class TestimonialDAO {
             CallableStatement cstmt = connection.prepareCall("{call sp_get_all_testimonials()}");
             ResultSet rs = cstmt.executeQuery();
             while(rs.next()) {
-                String testimonialId = rs.getString("testimonialId");
-                int adoptionId = rs.getInt("adoptionId");
+                String testimonialId = rs.getString("testimonial_id");
+                int adoptionId = rs.getInt("adoption_id");
                 String image = rs.getString("image");
                 String details = rs.getString("details");
                 int rating = rs.getInt("rating");
@@ -48,7 +48,7 @@ public class TestimonialDAO {
                     statement.setString(1, testimonialId);
                     try (ResultSet resultSet = statement.executeQuery()) {
                         if (resultSet.next()) {
-                            int adoptionId = resultSet.getInt("adoptionId");
+                            int adoptionId = resultSet.getInt("adoption_id");
                             String image = resultSet.getString("image");
                             String details = resultSet.getString("details");
                             int rating = resultSet.getInt("rating");

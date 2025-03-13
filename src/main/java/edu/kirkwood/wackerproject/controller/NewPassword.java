@@ -61,9 +61,20 @@ public class NewPassword extends HttpServlet {
                 if(passwordUpdated) {
                     // Send confirmation email
                     String subject = "New Password Created";
-                    String message = "<h2 style='color: black;'>New Password Created</h2>";
-                    message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: 5em;'>";
-                    message += "<p style='color: black;>Your password has changed. If you suspect that someone else changed your password, please reset it with this link:</p>";
+                    String message = "<div style='width: 400px; margin: 0 auto; padding: 20px; text-align: center; " +
+                            "border: 1px solid #ddd; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); " +
+                            "background-color: #f9f9f9; font-family: Arial, sans-serif;'>";
+
+                    message += "<img src='https://wacker.azurewebsites.net/images/dogLogo.png' alt='Logo' " +
+                            "style='width: 10em; margin-bottom: 1em; display: block; margin-left: auto; margin-right: auto;'>";
+
+                    message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' " +
+                            "style='width: 10em; display: block; margin-left: auto; margin-right: auto;'>";
+
+                    message += "<h2 style='color: black;'>New Password Created</h2>";
+
+                    message += "<p style='color: black;'>Your password has changed. If you suspect that someone else changed your password, please reset it with this link:</p>";
+
                     String appURL = "";
                     if (req.isSecure()) {
                         appURL = req.getServletContext().getInitParameter("appURLCloud");
@@ -71,8 +82,8 @@ public class NewPassword extends HttpServlet {
                         appURL = req.getServletContext().getInitParameter("appURLLocal");
                     }
                     String fullURL = String.format("%s/reset-password", appURL);
-                    message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
-                    // send email
+                    message += String.format("<p><a href='%s' target='_blank' style='color: blue; text-decoration: underline;'>%s</a></p>", fullURL, fullURL);
+                    message += "</div>";
                     EmailThread emailThread = new EmailThread(email, subject, message);
                     emailThread.start();
                     try {
@@ -80,10 +91,9 @@ public class NewPassword extends HttpServlet {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    // Redirect the user to the login page
-                    HttpSession session = req.getSession(); // get an existing session if one exists
+                    HttpSession session = req.getSession();
                     session.setAttribute("flashMessageSuccess", "New password has been created. Please sign in.");
-                    resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/login")); // Redirects the user to the login page
+                    resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/login"));
                     return;
                 } else {
                     req.setAttribute("newPasswordFail", "Could not reset your password.");

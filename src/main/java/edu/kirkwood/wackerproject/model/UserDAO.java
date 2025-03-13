@@ -49,7 +49,7 @@ public class UserDAO {
                 list.add(user);
             }
         } catch (SQLException e) {
-            e.printStackTrace();  // Print the stack trace for detailed error information
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return list;
@@ -125,10 +125,15 @@ public class UserDAO {
                 statement.setString(2, uuid);
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
-                    // generate email html
                     String subject = "Reset Password";
-                    String message = "<img src='https://wacker.azurewebsites.net/images/dogLogo.png' alt='Logo' style='width: 10em; margin-left: 5em;'>";
-                    message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: 5em;'>";
+                    // chatgpt helped me design the <div> style
+                    String message = "<div style='width: 400px; margin: 0 auto; padding: 20px; text-align: center; " +
+                            "border: 1px solid #ddd; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); " +
+                            "background-color: #f9f9f9; font-family: Arial, sans-serif;'>";
+
+                    message += "<img src='https://wacker.azurewebsites.net/images/dogLogo.png' alt='Logo' " +
+                                "style='width: 10em; margin-bottom: 1em; display: block;margin-left: auto; margin-right: auto;'>";
+                    message += "<img src='https://wacker.azurewebsites.net/images/cLit2Five.jpg' alt='Puppy Image' style='width: 10em; margin-left: auto; margin-right: auto;'>";
                     message += "<h2 style='color: black;'>FORGOT YOUR PASSWORD?</h2>";
                     message += "<p style='color: black;'>Don't worry! Just click this link to reset your password.</p>";
 
@@ -139,10 +144,10 @@ public class UserDAO {
                         appURL = req.getServletContext().getInitParameter("appURLLocal");
                     }
                     String fullURL = String.format("%s/new-password?token=%s", appURL, uuid);
-                    message += String.format("<p><a href=\"%s\" target=\"_blank\" style='display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-align: center; text-decoration: none; border-radius: 5px;'>Reset Password</a></p>", fullURL, fullURL);
+                    message += String.format("<p><a href='%s' target='_blank'>%s</a></p>", fullURL, fullURL);
                     message += "<p style='color: black;'>This link expires in 30 minutes.</p>";
                     message += "<p style='color: black;'>If you did not request to reset your password, you can ignore this message and your password will not be changed.</p>";
-                    // send email
+                    message += "</div>";
                     EmailThread emailThread = new EmailThread(email, subject, message);
                     emailThread.start();
                     try {
@@ -250,7 +255,7 @@ public class UserDAO {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;
         } catch (SQLException e) {
-            e.printStackTrace(); // Prints error details
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

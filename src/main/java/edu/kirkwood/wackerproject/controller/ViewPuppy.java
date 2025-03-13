@@ -18,26 +18,18 @@ public class ViewPuppy extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String breed = req.getParameter("breed");
 
-        // Log the breed parameter to confirm it's being received
-        System.out.println("Received breed: " + breed);
 
         if (breed == null || breed.isEmpty()) {
             resp.sendRedirect("index.jsp");
             return;
         }
 
-        try {
-            // Fetch puppies by breed from the DAO
-            List<Puppy> puppies = PuppyDAO.getPuppiesByBreed(breed);
-            System.out.println("Number of puppies found: " + puppies.size());  // Log the number of puppies found
+        List<Puppy> puppies = PuppyDAO.getPuppiesByBreed(breed);
 
-            req.setAttribute("pageTitle", "View Puppies");
+        req.setAttribute("pageTitle", "View Puppies");
 
-            req.setAttribute("puppies", puppies);
-            req.getRequestDispatcher("WEB-INF/view-puppies.jsp").forward(req, resp);
-        } catch (Exception e) {
-            e.printStackTrace();  // Log the error stack trace
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while fetching puppies.");
-        }
+        req.setAttribute("puppies", puppies);
+        req.getRequestDispatcher("WEB-INF/view-puppies.jsp").forward(req, resp);
+
     }
 }

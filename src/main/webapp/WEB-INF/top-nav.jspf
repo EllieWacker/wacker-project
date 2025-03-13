@@ -25,6 +25,8 @@
                                     <li><a class="dropdown-item" href="${appURL}/users">All Users</a></li>
                                     <li><a class="dropdown-item" href="${appURL}/add-puppy">Add Puppy</a></li>
                                     <li><a class="dropdown-item" href="${appURL}/puppies">All Puppies</a></li>
+                                    <li><a class="dropdown-item" href="${appURL}/add-litter">Add Litter</a></li>
+                                    <li><a class="dropdown-item" href="${appURL}/litters">All Litters</a></li>
                                 </ul>
                             </li>
                         </c:if>

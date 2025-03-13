@@ -9,37 +9,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(value="/update-puppy")
 public class AdminUpdatePuppy extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String puppyID = req.getParameter("puppyID");  // Get puppyID from request
+        String puppyID = req.getParameter("puppyID");
         if (puppyID == null || puppyID.isEmpty()) {
             req.setAttribute("errorMessage", "puppyID is missing.");
             req.getRequestDispatcher("WEB-INF/error.jsp").forward(req, resp);
-            return;  // Stop execution if puppyID is missing
+            return;
         }
         try {
-            // Attempt to retrieve the puppy from the database
             Puppy puppy = PuppyDAO.getPuppy(puppyID);
 
             if (puppy == null) {
-                // Log and display message if no puppy is found
-                System.out.println("No puppy found with ID: " + puppyID);
                 req.setAttribute("errorMessage", "No puppy found with ID: " + puppyID);
                 req.getRequestDispatcher("WEB-INF/error.jsp").forward(req, resp);
                 return;
             }
 
-            // Set puppy in request if found
             req.setAttribute("puppy", puppy);
             req.setAttribute("puppyID", puppyID);
             req.getRequestDispatcher("WEB-INF/update-puppy.jsp").forward(req, resp);
 
         }catch (Exception e) {
-            // Catch any unexpected exceptions
             e.printStackTrace();
             req.setAttribute("errorMessage", "An unexpected error occurred.");
             req.getRequestDispatcher("WEB-INF/error.jsp").forward(req, resp);
@@ -130,8 +124,9 @@ public class AdminUpdatePuppy extends HttpServlet {
 
         // Price validation
         try {
-            if (price < 0) {
-                throw new IllegalArgumentException("Price cannot be negative.");
+            if (price <= 0) {
+                validationError = true;
+                req.setAttribute("breedDescriptionError", "Price must be greater than 0.");
             }
             newPuppy.setPrice(price);
         } catch (IllegalArgumentException e) {
@@ -157,7 +152,6 @@ public class AdminUpdatePuppy extends HttpServlet {
             }
         }
 
-        // Set the updated puppy to the request and forward to the JSP
         req.setAttribute("puppy", newPuppy);
         req.setAttribute("puppyID", puppyID);
         req.getRequestDispatcher("WEB-INF/update-puppy.jsp").forward(req, resp);
