@@ -82,6 +82,7 @@
 
                 <div class="col-12">
                     <button class="btn btn-dark" type="submit">Submit form</button>
+                    <a href="${appURL}/litters" class="btn btn-danger">Return to Litters</a>
                 </div>
             </form>
         </c:otherwise>

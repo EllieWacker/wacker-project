@@ -1,6 +1,6 @@
 
 <div class="container py-4">
-    <a href="litters" class="btn btn-primary" role="button">View All Puppies</a>
+    <a href="litters" class="btn btn-primary" role="button">View All Litters</a>
     <h2>Add New Litter</h2>
     <c:if test="${not empty litterAdded}">
         <div class="alert <c:choose><c:when test="${litterAdded}">alert-success</c:when><c:otherwise>alert-danger</c:otherwise></c:choose>" role="alert">

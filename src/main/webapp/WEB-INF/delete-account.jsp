@@ -18,17 +18,14 @@
                                 <!-- Email input -->
                                 <div class="col-md-6 my-4">
                                     <label class="form-label" for="email">Enter your email to confirm account deletion</label>
-                                    <input class="form-control <c:if test="${not empty results.emailError}">is-invalid</c:if>"
+                                    <input class="form-control <c:if test="${not empty errorMessage}">is-invalid</c:if>"
                                            type="text" id="email" name="email" value="${email}">
-                                    <c:if test="${not empty results.emailError}">
-                                        <div class="invalid-feedback">${results.emailError}</div>
+                                    <c:if test="${not empty errorMessage}">
+                                        <div class="invalid-feedback">${errorMessage}</div>
                                     </c:if>
                                 </div>
 
-                                <!-- Trigger Modal -->
-                                <button type="button" class="btn btn-danger mb-0" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                    Delete my account
-                                </button>
+                                <button type="submit" class="btn btn-danger mb-0">Delete my account</button>
                             </form>
                         </div>
                     </div>
@@ -37,22 +34,29 @@
         </div>
     </section>
 
-    <!-- Modal -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="confirmDeleteModalLabel">Confirm Account Deletion</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete your account? This action cannot be undone.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" form="deleteAccountForm" class="btn btn-danger">Yes, Delete</button>
+    <c:if test="${showConfirmation}">
+        <div class="modal fade show" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-modal="true" style="display: block;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="confirmDeleteModalLabel">Confirm Account Deletion</h1>
+                        <a href="${appURL}/delete-account" class="btn-close" aria-label="Close"></a>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete your account? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <a href="${appURL}/delete-account" class="btn btn-secondary">Cancel</a>
+
+                        <form method="POST" action="${appURL}/delete-account" style="display: inline;">
+                            <input type="hidden" name="email" value="${email}">
+                            <input type="hidden" name="confirmed" value="true">
+                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="modal-backdrop fade show"></div>
+    </c:if>
 </main>

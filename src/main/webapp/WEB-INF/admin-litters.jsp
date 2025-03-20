@@ -8,6 +8,8 @@
                     <c:otherwise>There are ${litters.size()} litters</c:otherwise>
                 </c:choose>
             </p>
+            <a href="${appURL}/add-litter" class="btn btn-dark" style="margin-bottom: 20px;">Add a Litter</a>
+
             <c:if test="${litters.size() > 0}">
                 <div class="table-responsive">
                     <table class="table table-bordered">

@@ -2,11 +2,13 @@ package edu.kirkwood.wackerproject.controller;
 
 import edu.kirkwood.wackerproject.model.Puppy;
 import edu.kirkwood.wackerproject.model.PuppyDAO;
+import edu.kirkwood.wackerproject.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -14,6 +16,13 @@ import java.io.IOException;
 public class AdminUpdatePuppy extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User userFromSession = (User)session.getAttribute("activeUser");
+        if(userFromSession == null || !userFromSession.getStatus().equals("active") || !userFromSession.getPrivileges().equals("admin")) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         String puppyID = req.getParameter("puppyID");
         if (puppyID == null || puppyID.isEmpty()) {
             req.setAttribute("errorMessage", "puppyID is missing.");

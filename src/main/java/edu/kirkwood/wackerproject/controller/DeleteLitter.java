@@ -18,8 +18,14 @@ import java.io.IOException;
 public class DeleteLitter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String litterID = req.getParameter("litterID");
         HttpSession session = req.getSession();
+        User userFromSession = (User)session.getAttribute("activeUser");
+        if(userFromSession == null || !userFromSession.getStatus().equals("active") || !userFromSession.getPrivileges().equals("admin")) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        String litterID = req.getParameter("litterID");
 
         if (litterID == null || litterID.isEmpty()) {
             session.setAttribute("flashMessageWarning", "Invalid litter ID.");
@@ -57,7 +63,7 @@ public class DeleteLitter extends HttpServlet {
             boolean deleted = LitterDAO.deleteLitter(litterFromDatabase);
             if (deleted) {
                 session.setAttribute("flashMessageSuccess", "Litter has been successfully deleted.");
-                resp.sendRedirect(req.getContextPath() + "/puppies");  // Redirect to the list of puppies
+                resp.sendRedirect(req.getContextPath() + "/litters");  // Redirect to the list of litters
                 return;
             } else {
                 session.setAttribute("flashMessageDanger", "An error occurred while deleting litter.");

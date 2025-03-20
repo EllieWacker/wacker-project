@@ -10,6 +10,10 @@
           <c:otherwise>There are ${puppies.size()} puppies</c:otherwise>
         </c:choose>
       </p>
+
+      <a href="${appURL}/add-puppy" class="btn btn-dark" style="margin-bottom: 20px;">Add a Puppy</a>
+
+
       <c:if test="${puppies.size() > 0}">
         <div class="table-responsive">
           <table class="table table-bordered">

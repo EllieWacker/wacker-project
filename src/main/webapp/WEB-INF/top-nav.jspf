@@ -12,12 +12,11 @@
 
                 <div class="collapse navbar-collapse" id="navbarsExample09">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                        </li>
+                        <c:if test="${not empty sessionScope.activeUser}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="${appURL}/view-puppies">All Puppies</a>
+                            </li>
+                        </c:if>
                         <c:if test="${not empty sessionScope.activeUser && sessionScope.activeUser.privileges == 'admin'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>

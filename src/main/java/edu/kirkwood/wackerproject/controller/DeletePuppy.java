@@ -18,8 +18,14 @@ import java.io.IOException;
 public class DeletePuppy extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String puppyID = req.getParameter("puppyID");
         HttpSession session = req.getSession();
+        User userFromSession = (User)session.getAttribute("activeUser");
+        if(userFromSession == null || !userFromSession.getStatus().equals("active") || !userFromSession.getPrivileges().equals("admin")) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        String puppyID = req.getParameter("puppyID");
 
         if (puppyID == null || puppyID.isEmpty()) {
             session.setAttribute("flashMessageWarning", "Invalid puppy ID.");
