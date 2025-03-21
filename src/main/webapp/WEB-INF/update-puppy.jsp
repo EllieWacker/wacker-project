@@ -118,7 +118,7 @@
 
                 <div class="col-12">
                     <button class="btn btn-dark" type="submit">Submit form</button>
-                    <a href="${appURL}/puppies" class="btn btn-danger">Return to Puppies</a>
+                    <a href="${appURL}/puppies" class="btn btn-dark">Return to Puppies</a>
                 </div>
             </form>
         </c:otherwise>

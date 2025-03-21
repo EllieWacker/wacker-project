@@ -19,8 +19,7 @@ public class DeleteAccount extends HttpServlet {
         User user = (User) session.getAttribute("activeUser");
 
         if (user == null) {
-            req.setAttribute("errorMessage", "You must be logged in to delete your account.");
-            req.getRequestDispatcher("WEB-INF/delete-account.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/");
             return;
         }
 

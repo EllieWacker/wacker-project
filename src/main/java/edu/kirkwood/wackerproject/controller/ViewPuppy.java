@@ -18,12 +18,6 @@ public class ViewPuppy extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeUser");
-        if(userFromSession == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
 
         String breed = req.getParameter("breed");
         List<Puppy> puppies;

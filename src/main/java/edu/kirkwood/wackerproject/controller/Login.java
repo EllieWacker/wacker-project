@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
+
+import static org.apache.taglibs.standard.tag.common.core.Util.escapeXml;
+
 @WebServlet("/login")
 public class Login extends HttpServlet {
     private static final int maxTries = 5;
