@@ -1,3 +1,4 @@
+<%@ page import="java.time.LocalTime" %>
 <section class="my-4">
     <div class="container">
         <div class="row">
@@ -7,7 +8,8 @@
                         <div>
                             <jsp:useBean id="now" class="java.util.Date" scope="page"/>
                             <% // gets the hour from the date now object
-                                int currentHour = now.getHours();
+                                LocalTime localNow = LocalTime.now();
+                                int currentHour = localNow.getHour();
                                 pageContext.setAttribute("currentHour", currentHour);
                             %>
                             <c:choose>
