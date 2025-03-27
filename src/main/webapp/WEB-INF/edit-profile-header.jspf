@@ -1,4 +1,6 @@
 <%@ page import="java.time.LocalTime" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.time.ZonedDateTime" %>
 <section class="my-4">
     <div class="container">
         <div class="row">
@@ -8,7 +10,7 @@
                         <div>
                             <jsp:useBean id="now" class="java.util.Date" scope="page"/>
                             <% // gets the hour from the date now object
-                                LocalTime localNow = LocalTime.now();
+                                ZonedDateTime localNow = ZonedDateTime.now(ZoneId.of("America/New_York"));  // Use your desired timezone
                                 int currentHour = localNow.getHour();
                                 pageContext.setAttribute("currentHour", currentHour);
                             %>
