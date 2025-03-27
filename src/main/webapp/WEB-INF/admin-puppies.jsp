@@ -47,7 +47,7 @@
                 <td>${puppy.gender}</td>
                 <td>${puppy.adopted ? 'Yes' : 'No'}</td>
                 <td>${puppy.microchip ? 'Yes' : 'No'}</td>
-                <td>${puppy.price}</td>
+                <td><fmt:formatNumber value="${puppy.price}" type="currency" /></td>
                 <td>${puppy.breedDescription}</td>
               </tr>
             </c:forEach>

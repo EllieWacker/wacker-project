@@ -36,8 +36,8 @@
                                 <td>${litter.fatherDogID}</td>
                                 <td>${litter.motherDogID}</td>
                                 <td>${litter.image}</td>
-                                <td>${litter.dateOfBirth}</td>
-                                <td>${litter.goHomeDate}</td>
+                                <td><fmt:formatDate value="${litter.dateOfBirth}" dateStyle="long" /></td>
+                                <td><fmt:formatDate value="${litter.goHomeDate}" dateStyle="long" /></td>
                                 <td>${litter.numberPuppies}</td>
                             </tr>
                         </c:forEach>

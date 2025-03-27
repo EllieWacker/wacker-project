@@ -10,7 +10,10 @@ import static edu.kirkwood.shared.MySQL_Connect.getConnection;
 
 public class PuppyDAO {
     public static void main(String[] args) {
-        System.out.println(getPuppy("ALit1One"));
+     //   System.out.println(getPuppy("ALit1One"));
+        //System.out.println(getAllPuppies(5,0, "Mini Aussiedoodle"));
+        getAllBreeds().forEach(System.out::println);
+
     }
 
     public static Puppy getPuppy(String puppyId) {
@@ -66,10 +69,20 @@ public class PuppyDAO {
         }
     }
 
-    public static List<Puppy> getAllPuppies() {
+    public static List<Puppy> getAllPuppies(int limit, int offset, String breedFilter, Boolean adoptedFilter) {
         List<Puppy> list = new ArrayList<>();
         try (Connection connection = getConnection()) {
-            CallableStatement cstmt = connection.prepareCall("{call sp_get_all_puppies()}");
+            CallableStatement cstmt = connection.prepareCall("{call sp_get_all_puppies(?,?,?,?)}");
+            cstmt.setInt(1, limit);
+            cstmt.setInt(2, offset);
+            cstmt.setString(3, breedFilter);
+
+            if (adoptedFilter != null) {
+                cstmt.setBoolean(4, adoptedFilter); // Set true or false
+            } else {
+                cstmt.setNull(4, java.sql.Types.BOOLEAN); // Set NULL if adoptedFilter is null
+            }
+
             ResultSet rs = cstmt.executeQuery();
 
             if (!rs.isBeforeFirst()) {
@@ -176,6 +189,86 @@ public class PuppyDAO {
         }
         return puppyList;
     }
+
+    public static List<Puppy> getPuppiesByLitter(String litter) {
+        List<Puppy> puppyList = new ArrayList<>();
+        try (Connection connection = getConnection()) {
+            CallableStatement cstmt = connection.prepareCall("{call sp_get_puppies_by_litterID(?)}");
+            cstmt.setString(1, litter);
+
+            ResultSet rs = cstmt.executeQuery();
+
+            if (!rs.isBeforeFirst()) { // if there are no results in the result set
+                System.out.println("No puppies found.");
+            } else {
+                while (rs.next()) {
+                    String puppyID = rs.getString("puppy_id");
+                    String breedID = rs.getString("breed_id");
+                    String litterID = rs.getString("litter_id");
+                    String medicalRecordID = rs.getString("medical_record_id");
+                    String image = rs.getString("image");
+                    String gender = rs.getString("gender");
+                    boolean adopted = rs.getBoolean("adopted");
+                    boolean microchip = rs.getBoolean("microchip");
+                    double price = rs.getDouble("price");
+                    String breedDescription = rs.getString("breed_description");
+
+                    Puppy puppy = new Puppy(puppyID, breedID, litterID, medicalRecordID, image, gender, adopted, microchip, price, breedDescription);
+                    puppyList.add(puppy);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return puppyList;
+    }
+
+    public static List<Breed> getAllBreeds() {
+        List<Breed> breeds = new ArrayList<>();
+
+        String query = "{CALL sp_get_breeds()}";
+
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String id = resultSet.getString("breed_id");
+                int numPuppies = resultSet.getInt("num_puppies");
+
+                breeds.add(new Breed(id, numPuppies));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return breeds;
+    }
+
+//    public static List<Litter> getAllLitters() {
+//        List<Litter> litters = new ArrayList<>();
+//
+//        String query = "{CALL sp_get_litters()}";
+//
+//        try (Connection connection = getConnection();
+//             CallableStatement statement = connection.prepareCall(query);
+//             ResultSet resultSet = statement.executeQuery()) {
+//
+//            while (resultSet.next()) {
+//                String id = resultSet.getString("litter_id");
+//                int numPuppies = resultSet.getInt("num_puppies");
+//
+//                litters.add(new Litter(id, numPuppies));
+//            }
+//
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        return litters;
+//    }
+
 
 
 

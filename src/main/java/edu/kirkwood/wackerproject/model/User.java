@@ -125,8 +125,8 @@ public class User implements Comparable<User> {
         this.privileges = privileges;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    public Date getCreatedAt() {
+        return Date.from(createdAt);
     }
 
     public void setCreatedAt(Instant createdAt) {

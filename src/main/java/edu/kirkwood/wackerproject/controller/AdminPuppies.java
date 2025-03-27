@@ -17,6 +17,10 @@ import java.util.List;
 public class AdminPuppies extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    int limit = 5;
+    int offset = 0;
+    String breeds = "Mini Aussiedoodle";
+    boolean adopted = false;
 
         HttpSession session = req.getSession();
         User userFromSession = (User)session.getAttribute("activeUser");
@@ -25,7 +29,7 @@ public class AdminPuppies extends HttpServlet {
             return;
         }
 
-        List<Puppy> puppies = PuppyDAO.getAllPuppies();
+        List<Puppy> puppies = PuppyDAO.getAllPuppies(limit, offset, breeds, adopted);
         System.out.println("Number of puppies in request: " + puppies.size());
         req.setAttribute("puppies", puppies);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/admin-puppies.jsp");

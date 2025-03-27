@@ -43,7 +43,7 @@
                             <td>${fn:escapeXml(user.language)}</td>
                             <td>${fn:escapeXml(user.status)}</td>
                             <td>${fn:escapeXml(user.privileges)}</td>
-                            <td>${fn:escapeXml(user.createdAt)}</td>
+                            <td><fmt:formatDate value="${user.createdAt}" dateStyle="long" /></td>
                             <td>${fn:escapeXml(user.timezone)}</td>
                             <td>${fn:escapeXml(user.interests)}</td>
                             </c:forEach>

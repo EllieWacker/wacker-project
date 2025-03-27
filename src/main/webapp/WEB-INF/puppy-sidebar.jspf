@@ -1,0 +1,92 @@
+<!-- Right sidebar START -->
+<div class="col-lg-3">
+    <!-- Responsive offcanvas body START -->
+    <div class="offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasSidebar">
+        <div class="offcanvas-header bg-light">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Advanced Filter</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-3">
+
+            <form method="GET" action="${appURL}/view-puppies">
+
+                <!-- Preserve current offset -->
+                <input type="hidden" name="offset" value="${offset}" />
+
+                <!-- Category START -->
+                <div class="card card-body shadow p-4 mb-4">
+                    <h4 class="mb-2">Breed</h4>
+
+                    <c:forEach var="breed" items="${breeds}" varStatus="status">
+                        <c:if test="${breed.numPuppies > 0}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       value="${breed.breedID}"
+                                       name="breedFilter"
+                                       id="filter-${status.index + 1}"
+                                       <c:if test="${breed.breedID == selectedBreed || fn:contains(breedFilter, breed.breedID)}">checked</c:if> />
+                                <label class="form-check-label" for="filter-${status.index + 1}">
+                                        ${breed.breedID} (${breed.numPuppies})
+                                </label>
+                            </div>
+                        </c:if>
+                    </c:forEach>
+                </div>
+                <!-- Category END -->
+
+                <!-- Adopted Status START -->
+                <div class="card card-body shadow p-4 mb-4">
+                    <h4 class="mb-2">Adopted Status</h4>
+
+                    <!-- Adopted -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="adopted" id="adopted-true" value="true"
+                               <c:if test="${adopted eq true}">checked</c:if>>
+                        <label class="form-check-label" for="adopted-true">Adopted</label>
+                    </div>
+
+                    <!-- Available -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="adopted" id="adopted-false" value="false"
+                               <c:if test="${adopted eq false}">checked</c:if>>
+                        <label class="form-check-label" for="adopted-false">Available</label>
+                    </div>
+
+                    <!-- Show All -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="adopted" id="adopted-all" value=""
+                               <c:if test="${adopted eq null}">checked</c:if>>
+                        <label class="form-check-label" for="adopted-all">Show All</label>
+                    </div>
+                </div>
+
+                <!-- Adopted Status END -->
+
+                <!-- Limit START -->
+                <div class="card card-body shadow p-4">
+                    <h4 class="mb-2">Show</h4>
+                    <div class="btn-group" role="group" aria-label="Show radio toggle button group">
+                        <input type="radio" class="btn-check" id="show-5" autocomplete="off" name="limit" value="5"
+                               <c:if test="${limit eq 5}">checked</c:if>>
+                        <label class="btn btn-outline-success" for="show-5">5</label>
+
+                        <input type="radio" class="btn-check" id="show-10" autocomplete="off" name="limit" value="10"
+                               <c:if test="${limit eq 10}">checked</c:if>>
+                        <label class="btn btn-outline-success" for="show-10">10</label>
+
+                        <input type="radio" class="btn-check" id="show-20" autocomplete="off" name="limit" value="20"
+                               <c:if test="${limit eq 20}">checked</c:if>>
+                        <label class="btn btn-outline-success" for="show-20">20</label>
+                    </div>
+                </div>
+                <!-- Limit END -->
+
+                <!-- Submit Button -->
+                <div class="d-grid text-center m-4">
+                    <button type="submit" class="btn btn-primary">Filter Results</button>
+                </div>
+            </form><!-- Form End -->
+
+        </div><!-- offcanvas-body End -->
+    </div><!-- Responsive offcanvas body END -->
+</div><!-- Right sidebar END -->
