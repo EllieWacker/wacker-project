@@ -14,7 +14,7 @@
                                 <c:when test="${currentHour >= 5 && currentHour < 12}">
                                     <h4>Good morning<c:if test="${not empty activeUser.firstName}">, ${fn:escapeXml(activeUser.firstName)}</c:if>!</h4>
                                 </c:when>
-                                <c:when test="${currentHour >= 12 and currentHour < 17}">
+                                <c:when test="${currentHour >= 12 && currentHour < 17}">
                                     <h4>Good Afternoon<c:if test="${not empty activeUser.firstName}">, ${fn:escapeXml(activeUser.firstName)}</c:if>!</h4>
                                 </c:when>
                                 <c:otherwise>
