@@ -1,6 +1,9 @@
 <%@ page import="java.time.LocalTime" %>
 <%@ page import="java.time.ZoneId" %>
 <%@ page import="java.time.ZonedDateTime" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.TimeZone" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <section class="my-4">
     <div class="container">
         <div class="row">
@@ -8,11 +11,28 @@
                 <div class="card bg-light card-body">
                     <div class="col d-flex justify-content-between align-items-center">
                         <div>
-                            <jsp:useBean id="now" class="java.util.Date" scope="page"/>
-                            <% // gets the hour from the date now object
-                                ZonedDateTime localNow = ZonedDateTime.now(ZoneId.of("America/New_York"));  // Use your desired timezone
+                            <jsp:useBean id="now" class="java.util.Date" />
+                            <%
+                                String timezone = request.getParameter("timezone"); // gets the timezone parameter
+                                session.setAttribute("timezone", timezone); // sets the timezone parameter
+                                if (timezone == null || timezone.isEmpty()) {
+                                    timezone = "America/Chicago";  // Sets the default if its empty
+                                }
+
+                                ZonedDateTime localNow = ZonedDateTime.now(ZoneId.of(timezone)); // gets the current time with the given timezone
+
+                                Date nowDate = Date.from(localNow.toInstant()); // turn the zonedDateTime into a Java.Util.Date
+                                request.setAttribute("now", nowDate); // sets the date attribute
+
                                 int currentHour = localNow.getHour();
-                                pageContext.setAttribute("currentHour", currentHour);
+                                request.setAttribute("currentHour", currentHour);
+
+                                // I formatted the date here since the timezone was not passing correctly in my fmt:formatDate
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy h:mm  a z"); // SimpleDateFormat is a lot like the fmt:formatDate though
+                                simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timezone));  //gets the set timezone
+                                String formattedDate = simpleDateFormat.format(nowDate); // formats the date
+
+                                request.setAttribute("formattedDate", formattedDate); // sets the attribute for the new formatted date
                             %>
                             <c:choose>
                                 <c:when test="${currentHour >= 5 && currentHour < 12}">
@@ -27,7 +47,7 @@
 
                             </c:choose>
                             <ul class="list-inline mb-0">
-                                <li class="list-item"><i class="bi bi-calendar-event-fill fs-6"></i> Today is <fmt:formatDate value="${now}" pattern="MMMM d, YYYY h:mm a z" /></li>
+                                <li class="list-item"><i class="bi bi-calendar-event-fill fs-6"></i> Today is ${formattedDate}</li>
                                 <li class="list-item"><i class="bi bi-star-fill fs-6"></i> Member since <fmt:formatDate value="${activeUser.createdAt}" dateStyle="long" /></li>
                             </ul>
                         </div>
@@ -37,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Profile banner END -->
+            <!-- Profile banner END <fmt:formatDate value="${now}" pattern="MMMM d, YYYY h:mm a" />-->
         </div>
     </div>
 </section>

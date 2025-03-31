@@ -12,8 +12,25 @@ public class PuppyDAO {
     public static void main(String[] args) {
      //   System.out.println(getPuppy("ALit1One"));
         //System.out.println(getAllPuppies(5,0, "Mini Aussiedoodle"));
+        System.out.println(getPuppyCount("Mini Aussiedoodle"));
         getAllBreeds().forEach(System.out::println);
 
+    }
+
+    public static int getPuppyCount(String breedID) {
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_total_puppies(?)}");
+        ) {
+            statement.setString(1, breedID);
+            try(ResultSet resultSet = statement.executeQuery();) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("total_puppies");
+                }
+            }
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
     }
 
     public static Puppy getPuppy(String puppyId) {

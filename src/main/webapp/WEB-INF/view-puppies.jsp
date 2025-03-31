@@ -10,7 +10,10 @@
 
     <div class="row">
         <div class="col-lg-9">
-            <p class="lead">${fn:length(puppies)} puppy${fn:length(puppies) != 1 ? "s" : ""} shown</p>
+            <div class="col d-flex justify-content-between align-items-center">
+                <p class="lead">Showings puppies ${firstPuppyShown}-${lastPuppyShown} of ${totalPuppies}</p>
+                <%@include file="/WEB-INF/pagination.jspf"%>
+            </div>
             <div class="row g-4">
                 <c:forEach items="${puppies}" var="puppy">
                     <div class="col-sm-12 col-md-6 col-lg-4">
@@ -22,7 +25,7 @@
                                     style="width: 13em; height: 200px; object-fit: cover;"
                             />
                             <strong>${puppy.puppyID}</strong><br />
-                            $${puppy.price}<br />
+                            <fmt:formatNumber value="${puppy.price}" type="currency"/><br />
                             <small>${puppy.gender}</small><br />
                             <small>${puppy.adopted ? 'Adopted' : 'Available'}</small><br />
                             <p class="badge rounded-pill text-bg-secondary"><a class="text-white" href="${appURL}/view-puppies?breedFilter=${puppy.breedID}">${puppy.breedID}</a></p><br />
@@ -37,6 +40,9 @@
                     </div>
                 </c:forEach>
             </div> <!-- end puppy row-->
+            <div class="col d-flex justify-content-end align-items-center mt-4">
+                <%@include file="/WEB-INF/pagination.jspf"%>
+            </div>
         </div> <!-- end 3/4-->
         <%@include file="puppy-sidebar.jspf"%>
     </div> <!-- end row -->

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 
@@ -95,14 +96,21 @@ public class EditProfile extends HttpServlet {
         }
 
         try {
-            if(timezone != null && !timezone.equals(user.getTimezone())) {
-                user.setTimezone(timezone);
+            if (timezone != null && !timezone.equals(user.getTimezone())) {
+                try {
+                    ZoneId.of(timezone);  // Check if the timezone is valid
+                    user.setTimezone(timezone);
+                    session.setAttribute("timezone", timezone);
+                } catch (DateTimeParseException e) {
+                    errorFound = true;
+                    req.setAttribute("timezoneError", "Invalid timezone: " + timezone);
+                    req.setAttribute("timezone", user.getTimezone() != null ? user.getTimezone() : "UTC");
+                }
             }
-        } catch(IllegalArgumentException e) {
+        } catch (Exception e) {
             errorFound = true;
-            req.setAttribute("timezoneError", e.getMessage());
-            req.setAttribute("timezone", timezone);
-
+            req.setAttribute("timezoneError", "Unexpected error occurred.");
+            req.setAttribute("timezone", "America/Chicago");
         }
 
 
