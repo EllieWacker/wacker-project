@@ -25,8 +25,17 @@ public class UserDAO {
         add(user);
     }
 
-    public static List<User> getAll() {
+    public static void deletePasswordReset(String email) {
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall("{CALL sp_delete_password_reset(?)}")) {
+            statement.setString(1, email);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public static List<User> getAll() {
         List<User> list = new ArrayList<>();
         try (Connection connection = getConnection()) {
             CallableStatement cstmt = connection.prepareCall("{call sp_get_all_users()}");
@@ -184,10 +193,7 @@ public class UserDAO {
                 if (minutesElapsed < 30) {
                     email = resultSet.getString("email");
                 }
-                int id = resultSet.getInt("id");
-                CallableStatement statement2 = connection.prepareCall("{CALL sp_delete_password_reset(?)}");
-                statement2.setInt(1, id);
-                statement2.executeUpdate();
+                deletePasswordReset(email);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

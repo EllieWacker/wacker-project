@@ -19,7 +19,7 @@ public class DeleteAccount extends HttpServlet {
         User user = (User) session.getAttribute("activeUser");
 
         if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
