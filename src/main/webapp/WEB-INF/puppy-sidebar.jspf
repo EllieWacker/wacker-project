@@ -9,7 +9,7 @@
         <div class="offcanvas-body p-3">
 
             <form method="GET" action="${appURL}/view-puppies">
-
+                <input type="hidden" name="page" value="${page}">
                 <!-- Preserve current offset -->
                 <input type="hidden" name="offset" value="${offset}" />
 
@@ -24,7 +24,7 @@
                                        value="${breed.breedID}"
                                        name="breedFilter"
                                        id="filter-${status.index + 1}"
-                                       <c:if test="${breed.breedID == selectedBreed || fn:contains(breedFilter, breed.breedID)}">checked</c:if> />
+                                       <c:if test="${breed.breedID == selectedBreed || cfn:contains(breedsArr, breed.breedID)}">checked</c:if> />
                                 <label class="form-check-label" for="filter-${status.index + 1}">
                                         ${breed.breedID} (${breed.numPuppies})
                                 </label>

@@ -39,8 +39,9 @@ public class ViewPuppy extends HttpServlet {
             breedFilter = String.join(",", breedsArr);
         }
         req.setAttribute("breedFilter", breedFilter);
+        req.setAttribute("breedsArr", breedsArr);
 
-//        //adopted filter stuff
+       //adopted filter stuff
         String adoptedStr = req.getParameter("adopted");
         Boolean adopted = null;
         if (adoptedStr != null) {
@@ -50,6 +51,7 @@ public class ViewPuppy extends HttpServlet {
                 adopted = false;
             }
         }
+        req.setAttribute("adoptedStr", adoptedStr);
         req.setAttribute("adopted", adopted);
 
         // Get the total product count
