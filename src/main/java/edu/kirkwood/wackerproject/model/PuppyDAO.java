@@ -12,16 +12,17 @@ public class PuppyDAO {
     public static void main(String[] args) {
      //   System.out.println(getPuppy("ALit1One"));
         //System.out.println(getAllPuppies(5,0, "Mini Aussiedoodle"));
-        System.out.println(getPuppyCount("Mini Aussiedoodle"));
+        System.out.println(getPuppyByID("ALit1One"));
         getAllBreeds().forEach(System.out::println);
 
     }
 
-    public static int getPuppyCount(String breedID) {
+    public static int getPuppyCount(String breedID, boolean adopted) {
         try(Connection connection = getConnection();
-            CallableStatement statement = connection.prepareCall("{CALL sp_get_total_puppies(?)}");
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_total_puppies(?, ?)}");
         ) {
             statement.setString(1, breedID);
+            statement.setBoolean(2, adopted);
             try(ResultSet resultSet = statement.executeQuery();) {
                 if (resultSet.next()) {
                     return resultSet.getInt("total_puppies");
@@ -263,30 +264,24 @@ public class PuppyDAO {
         return breeds;
     }
 
-//    public static List<Litter> getAllLitters() {
-//        List<Litter> litters = new ArrayList<>();
-//
-//        String query = "{CALL sp_get_litters()}";
-//
-//        try (Connection connection = getConnection();
-//             CallableStatement statement = connection.prepareCall(query);
-//             ResultSet resultSet = statement.executeQuery()) {
-//
-//            while (resultSet.next()) {
-//                String id = resultSet.getString("litter_id");
-//                int numPuppies = resultSet.getInt("num_puppies");
-//
-//                litters.add(new Litter(id, numPuppies));
-//            }
-//
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//        return litters;
-//    }
-
-
-
-
+    public static Puppy getPuppyByID(String puppyID) {
+        Puppy puppy = null;
+        try(Connection connection = getConnection()) {
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_puppy_by_id(?)}");
+            statement.setString(1, puppyID);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                String id = rs.getString("puppy_id");
+                String breedID = rs.getString("breed_id");
+                String litterID = rs.getString("litter_id");
+                String gender = rs.getString("gender");
+                String image = rs.getString("image");
+                double price = rs.getDouble("price");
+                puppy = new Puppy(id, breedID, litterID, gender, image, price);
+            }
+        } catch(SQLException e) {
+            throw new RuntimeException("Database error - " + e.getMessage());
+        }
+        return puppy;
+    }
 }

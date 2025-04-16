@@ -38,7 +38,6 @@ public class ViewPuppy extends HttpServlet {
         if(breedsArr != null && breedsArr.length > 0){
             breedFilter = String.join(",", breedsArr);
         }
-        req.setAttribute("breedFilter", breedFilter);
         req.setAttribute("breedsArr", breedsArr);
 
        //adopted filter stuff
@@ -54,10 +53,9 @@ public class ViewPuppy extends HttpServlet {
         req.setAttribute("adoptedStr", adoptedStr);
         req.setAttribute("adopted", adopted);
 
-        // Get the total product count
-        int totalPuppies = PuppyDAO.getPuppyCount(breedFilter);
+        int totalPuppies = PuppyDAO.getPuppyCount(breedFilter, adopted != null ? adopted : false);
         int totalPages = totalPuppies / limit;
-        if(totalPuppies % limit != 0) {
+        if (totalPuppies % limit != 0) {
             totalPages++;
         }
         req.setAttribute("totalPages", totalPages);
@@ -69,23 +67,20 @@ public class ViewPuppy extends HttpServlet {
         try{
             page = Integer.parseInt(pageStr);
         }catch(NumberFormatException e){
-
         }
-        if(page > totalPages){
-            page = totalPages;
-        }else if(page < 1){
+        if(page < 1) { // no negatives
             page = 1;
+        } else if(page > totalPages) {
+            page = totalPages;
         }
         req.setAttribute("page", page);
         int offset = (page - 1) * limit;
 
-        // Calculate begin and end page links
         int pageLinks = 5;
         int beginPage = page / pageLinks * pageLinks > 0 ? page / pageLinks * pageLinks : 1;
         int endPage = beginPage + pageLinks - 1 > totalPages ? totalPages : beginPage + pageLinks - 1;
         req.setAttribute("beginPage", beginPage);
         req.setAttribute("endPage", endPage);
-
 
         //Determine the first and last puppies shown
         int firstPuppyShown = 1 + (page - 1) * limit;
@@ -101,14 +96,13 @@ public class ViewPuppy extends HttpServlet {
         req.setAttribute("breeds", breeds);
 
         String breed = req.getParameter("breed");
+        if (breed != null && !breed.isEmpty()) {
+            breedFilter = breed;
+        }
         List<Puppy> puppies;
 
-        if (breed == null || breed.isEmpty()) {
-            puppies = PuppyDAO.getAllPuppies(limit, offset, breedFilter, adopted);
+        puppies = PuppyDAO.getAllPuppies(limit, offset, breedFilter, adopted);
 
-        }else{
-            puppies = PuppyDAO.getPuppiesByBreed(breed);
-        }
 
         req.setAttribute("pageTitle", "View Puppies");
 

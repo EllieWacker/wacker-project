@@ -1,6 +1,8 @@
 package edu.kirkwood.wackerproject.model;
 
 
+import java.util.Objects;
+
 public class Puppy {
     private String puppyID;
     private String breedID;
@@ -14,6 +16,27 @@ public class Puppy {
     private String breedDescription;
 
     public Puppy() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Puppy puppy = (Puppy) o;
+        return Double.compare(price, puppy.price) == 0 && Objects.equals(puppyID, puppy.puppyID) && Objects.equals(breedID, puppy.breedID) && Objects.equals(litterID, puppy.litterID) && Objects.equals(gender, puppy.gender) && Objects.equals(image, puppy.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(puppyID, breedID, litterID, gender, image, price);
+    }
+
+    public Puppy(String puppyID, String breedID, String litterID, String gender, String image, double price) {
+        this.puppyID = puppyID;
+        this.breedID = breedID;
+        this.litterID = litterID;
+        this.gender = gender;
+        this.image = image;
+        this.price = price;
     }
 
     public Puppy(String puppyID, String breedID, String litterID, String medicalRecordID, String image, String gender, boolean adopted, boolean microchip, double price, String breedDescription) {

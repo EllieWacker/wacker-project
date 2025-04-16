@@ -1,112 +1,150 @@
-<c:if test="${totalPages gt 1}">
-<nav aria-label="...">
-    <ul class="pagination">
-        <c:if test="${page gt 1}">
-            <li class="page-item">
-                <a class="page-link" href="
-                    <c:url value="${appURL}/view-puppies">
-                        <c:param name="page" value="1" />
-                        <c:forEach items="${breedsArr}" var="breed">
-                            <c:param name="breedFilter" value="${breedFilter}" />
-                        </c:forEach>
-                        <c:param name="adopted" value="adopted" />
-                        <c:if test="${not empty limit}"><c:param name="limit" value="${limit}" /></c:if>
-                    </c:url>
-                "><i class="bi bi-chevron-double-left"></i></a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="
-                    <c:url value="${appURL}/view-puppies">
-                        <c:param name="page" value="${page - 1}" />
-                        <c:forEach items="${breedsArr}" var="breed">
-                        <c:param name="breedFilter" value="${breedFilter}" />
-                        </c:forEach>
-                       <c:choose>
-                            <c:when test="${adoptedStr eq 'true'}">
-                                <c:param name="adopted" value="true" />
-                            </c:when>
-                            <c:when test="${adoptedStr eq 'false'}">
-                                <c:param name="adopted" value="false" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:param name="adopted" value=" " />
-                            </c:otherwise>
-                        </c:choose>
-                        <c:if test="${not empty limit}"><c:param name="limit" value="${limit}" /></c:if>
-                    </c:url>
-                "><i class="bi bi-chevron-left"></i></a>
-            </li>
-        </c:if>
-        <c:forEach var="i" begin="${beginPage}" end="${endPage}">
-            <li class="page-item <c:if test="${page eq i}">active</c:if>" <c:if test="${page eq i}">aria-current="page"</c:if>>
-                <a class="page-link" href="
-                    <c:url value="${appURL}/view-puppies">
-                        <c:param name="page" value="${i}" />
-                        <c:forEach items="${breedsArr}" var="breed">
-                        <c:param name="breedFilter" value="${breedFilter}" />
-                        </c:forEach>
-                        <c:choose>
-                            <c:when test="${adoptedStr eq 'true'}">
-                                <c:param name="adopted" value="true" />
-                            </c:when>
-                            <c:when test="${adoptedStr eq 'false'}">
-                                <c:param name="adopted" value="false" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:param name="adopted" value=" " />
-                            </c:otherwise>
-                        </c:choose>
-                        <c:if test="${not empty limit}"><c:param name="limit" value="${limit}" /></c:if>
-                    </c:url>
-                ">${i}</a>
-            </li>
-        </c:forEach>
-        <c:if test="${page lt totalPages}">
-            <li class="page-item">
-                <a class="page-link" href="
-                    <c:url value="${appURL}/view-puppies">
-                        <c:param name="page" value="${page + 1}" />
-                        <c:forEach items="${breedsArr}" var="breed">
-                        <c:param name="breedFilter" value="${breedFilter}" />
-                        </c:forEach>
-                        <c:choose>
-                            <c:when test="${adoptedStr eq 'true'}">
-                                <c:param name="adopted" value="true" />
-                            </c:when>
-                            <c:when test="${adoptedStr eq 'false'}">
-                                <c:param name="adopted" value="false" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:param name="adopted" value=" " />
-                            </c:otherwise>
-                        </c:choose>
-                        <c:if test="${not empty limit}"><c:param name="limit" value="${limit}" /></c:if>
-                    </c:url>
-                "><i class="bi bi-chevron-right"></i></a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="
-                    <c:url value="${appURL}/view-puppies">
-                        <c:param name="page" value="${totalPages}" />
-                        <c:forEach items="${breedsArr}" var="breed">
-                        <c:param name="breedFilter" value="${breedFilter}" />
-                        </c:forEach>
-                        <c:choose>
-                            <c:when test="${adoptedStr eq 'true'}">
-                                <c:param name="adopted" value="true" />
-                            </c:when>
-                            <c:when test="${adoptedStr eq 'false'}">
-                                <c:param name="adopted" value="false" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:param name="adopted" value=" " />
-                            </c:otherwise>
-                        </c:choose>
-                        <c:if test="${not empty limit}"><c:param name="limit" value="${limit}" /></c:if>
-                    </c:url>
-                "><i class="bi bi-chevron-double-right"></i></a>
-            </li>
-        </c:if>
-    </ul>
-</nav>
+<c:if test="${totalPages > 1}">
+    <nav aria-label="...">
+        <ul class="pagination">
+            <!-- First page -->
+            <c:if test="${page > 1}">
+                <li class="page-item">
+                    <a class="page-link" href="
+                        <c:url value="${appURL}/view-puppies">
+                            <c:param name="page" value="1" />
+                            <c:forEach items="${breedsArr}" var="breed">
+                                <c:if test="${not empty breed}">
+                                    <c:param name="breedFilter" value="${breed}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${adoptedStr eq 'true'}">
+                                    <c:param name="adopted" value="true" />
+                                </c:when>
+                                <c:when test="${adoptedStr eq 'false'}">
+                                    <c:param name="adopted" value="false" />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:param name="adopted" value="" />
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${not empty limit}">
+                                <c:param name="limit" value="${limit}" />
+                            </c:if>
+                        </c:url>
+                    "><i class="bi bi-chevron-double-left"></i></a>
+                </li>
+<%--  previous page--%>
+                <li class="page-item">
+                    <a class="page-link" href="
+                        <c:url value="${appURL}/view-puppies">
+                            <c:param name="page" value="${page - 1}" />
+                            <c:forEach items="${breedsArr}" var="breed">
+                                <c:if test="${not empty breed}">
+                                    <c:param name="breedFilter" value="${breed}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${adoptedStr eq 'true'}">
+                                    <c:param name="adopted" value="true" />
+                                </c:when>
+                                <c:when test="${adoptedStr eq 'false'}">
+                                    <c:param name="adopted" value="false" />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:param name="adopted" value="" />
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${not empty limit}">
+                                <c:param name="limit" value="${limit}" />
+                            </c:if>
+                        </c:url>
+                    "><i class="bi bi-chevron-left"></i></a>
+                </li>
+            </c:if>
+
+            <!-- Page Numbers -->
+            <c:forEach var="i" begin="${beginPage}" end="${endPage}">
+                <li class="page-item <c:if test="${page == i}">active</c:if>" <c:if test="${page eq i}">aria-current="page"</c:if> >
+                    <a class="page-link" href="
+                        <c:url value="${appURL}/view-puppies">
+                            <c:param name="page" value="${i}" />
+                            <c:forEach items="${breedsArr}" var="breed">
+                                <c:if test="${not empty breed}">
+                                    <c:param name="breedFilter" value="${breed}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${adoptedStr eq 'true'}">
+                                    <c:param name="adopted" value="true" />
+                                </c:when>
+                                <c:when test="${adoptedStr eq 'false'}">
+                                    <c:param name="adopted" value="false" />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:param name="adopted" value="" />
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${not empty limit}">
+                                <c:param name="limit" value="${limit}" />
+                            </c:if>
+                        </c:url>
+                    ">${i}</a>
+                </li>
+            </c:forEach>
+
+            <!-- next page -->
+            <c:if test="${page < totalPages}">
+                <li class="page-item">
+                    <a class="page-link" href="
+                        <c:url value="${appURL}/view-puppies">
+                            <c:param name="page" value="${page + 1}" />
+                            <c:forEach items="${breedsArr}" var="breed">
+                                <c:if test="${not empty breed}">
+                                    <c:param name="breedFilter" value="${breed}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${adoptedStr eq 'true'}">
+                                    <c:param name="adopted" value="true" />
+                                </c:when>
+                                <c:when test="${adoptedStr eq 'false'}">
+                                    <c:param name="adopted" value="false" />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:param name="adopted" value="" />
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${not empty limit}">
+                                <c:param name="limit" value="${limit}" />
+                            </c:if>
+                        </c:url>
+                    "><i class="bi bi-chevron-right"></i></a>
+                </li>
+
+<%--       go to end of pages--%>
+                <li class="page-item">
+                    <a class="page-link" href="
+                        <c:url value="${appURL}/view-puppies">
+                            <c:param name="page" value="${totalPages}" />
+                            <c:forEach items="${breedsArr}" var="breed">
+                                <c:if test="${not empty breed}">
+                                    <c:param name="breedFilter" value="${breed}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${adoptedStr eq 'true'}">
+                                    <c:param name="adopted" value="true" />
+                                </c:when>
+                                <c:when test="${adoptedStr eq 'false'}">
+                                    <c:param name="adopted" value="false" />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:param name="adopted" value="" />
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${not empty limit}">
+                                <c:param name="limit" value="${limit}" />
+                            </c:if>
+                        </c:url>
+                    "><i class="bi bi-chevron-double-right"></i></a>
+                </li>
+            </c:if>
+        </ul>
+    </nav>
 </c:if>

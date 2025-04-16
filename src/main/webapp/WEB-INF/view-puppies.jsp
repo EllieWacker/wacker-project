@@ -33,7 +33,12 @@
 
                             <c:if test="${!puppy.adopted}">
                                 <div slot="footer">
-                                    <sl-button variant="primary" pill>Adopt</sl-button>
+                                    <form method="POST" action="${appURL}/adopt" class="w-75">
+                                        <input type="hidden" name="puppyID" value="${puppy.puppyID}">
+                                        <div class="input-group">
+                                            <button type="submit" class="btn btn-outline-primary">Adopt</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </c:if>
                         </sl-card>
