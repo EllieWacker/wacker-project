@@ -100,8 +100,8 @@
                                 <div class="col-md-4">
                                     <label for="state" class="form-label">State</label>
                                     <select class="form-select" id="state" name="state">
-                                        <option value="IA">Choose...</option>
-                                        <option>California</option>
+                                        <option value="">Choose...</option>
+                                        <option value="IA" selected>Iowa</option>
                                     </select>
                                     <div class="invalid-feedback">
                                         Please provide a valid state.
@@ -124,9 +124,29 @@
                                 <label class="form-check-label" for="same_address">Shipping address is the same as my billing address</label>
                             </div>
 
+                                <%--                    <div class="form-check">--%>
+                                <%--                        <input type="checkbox" class="form-check-input" id="save-info">--%>
+                                <%--                        <label class="form-check-label" for="save-info">Save this information for next time</label>--%>
+                                <%--                    </div>--%>
+
                             <hr class="my-4">
 
                             <h4 class="mb-3">Payment</h4>
+
+                                <%--                    <div class="my-3">--%>
+                                <%--                        <div class="form-check">--%>
+                                <%--                            <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>--%>
+                                <%--                            <label class="form-check-label" for="credit">Credit card</label>--%>
+                                <%--                        </div>--%>
+                                <%--                        <div class="form-check">--%>
+                                <%--                            <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>--%>
+                                <%--                            <label class="form-check-label" for="debit">Debit card</label>--%>
+                                <%--                        </div>--%>
+                                <%--                        <div class="form-check">--%>
+                                <%--                            <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>--%>
+                                <%--                            <label class="form-check-label" for="paypal">PayPal</label>--%>
+                                <%--                        </div>--%>
+                                <%--                    </div>--%>
 
                             <div class="row gy-3">
                                 <div class="col-md-6">

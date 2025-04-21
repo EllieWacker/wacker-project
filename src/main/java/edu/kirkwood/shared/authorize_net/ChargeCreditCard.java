@@ -12,8 +12,6 @@ import net.authorize.api.controller.base.ApiOperationBase;
 public class ChargeCreditCard {
     public static void main(String[] args) {
         run(
-                Config.getEnv("AUTHORIZE_API_LOGIN_ID"),
-                Config.getEnv("AUTHORIZE_TRANSACTION_KEY"),
                 25.00,
                 new String[]{"6011000000000012","1225","999"},
                 new String[]{"John", "Doe", "123 Main Street", "Cedar Rapids","IA","52404","USA","3191234567"},
@@ -23,8 +21,9 @@ public class ChargeCreditCard {
         );
     }
 
-    public static ANetApiResponse run(String apiLoginId, String transactionKey, Double amount, String[] creditCardInfo, String[] billingInfo, String[] shippingInfo, String customerEmail, boolean useBillingAsShipping) {
-
+    public static ANetApiResponse run(Double amount, String[] creditCardInfo, String[] billingInfo, String[] shippingInfo, String customerEmail, boolean useBillingAsShipping) {
+        String apiLoginId = Config.getEnv("AUTHORIZE_API_LOGIN_ID");
+        String transactionKey = Config.getEnv("AUTHORIZE_TRANSACTION_KEY");
         // Set the request to operate in either the sandbox or production environment
         ApiOperationBase.setEnvironment(Environment.SANDBOX);
 
