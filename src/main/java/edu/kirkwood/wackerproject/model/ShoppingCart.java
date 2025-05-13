@@ -52,6 +52,18 @@ public class ShoppingCart {
     }
 
 
+    @Override
+    public String toString() {
+        String json = "[";
+        for(Map.Entry<Puppy, Integer> entry: contents.entrySet()) {
+            Puppy puppy = entry.getKey();
+            json += "{";
+            json += String.format("\"puppy_id\": \"%s\", \"price\": %.2f", puppy.getPuppyID(), puppy.getPrice() );
+            json += "},";
+        }
+        json = json.substring(0, json.length() - 1) + "]";
+        return json;
+    }
 
     public static void main(String[] args) {
         ShoppingCart cart = new ShoppingCart();
@@ -68,5 +80,10 @@ public class ShoppingCart {
         System.out.println("There are " + cart.getTotalPuppyCount() + " puppies in your cart");
 
         System.out.println("Your total is " + cart.getTotalPrice());
+        System.out.println(cart);
+        String[] shippingInfo = new String[]{"Test", "User", "111 First Ave.", "Iowa City", "IA", "55555"};
+        String email = "test@example.com";
+        int newOrderId = OrderDAO.addOrder(shippingInfo, email, cart.toString());
+        System.out.println(newOrderId);
     }
 }

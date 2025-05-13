@@ -1,5 +1,6 @@
 package edu.kirkwood.wackerproject.controller;
 import edu.kirkwood.shared.authorize_net.ChargeCreditCard;
+import edu.kirkwood.wackerproject.model.OrderDAO;
 import edu.kirkwood.wackerproject.model.ShoppingCart;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -68,20 +69,24 @@ public class Checkout extends HttpServlet {
             HttpSession session = req.getSession();
             ShoppingCart cart = (ShoppingCart)session.getAttribute("cart");
             if(cart != null) {
-                Double amount = cart.getTotalPrice();
-                CreateTransactionResponse response = (CreateTransactionResponse) ChargeCreditCard.run(amount, ccInfo, billingInfo, shippingInfo, email, sameAddress);
-                // Parse the response to determine results
-                if (response!=null && response.getMessages().getResultCode() == MessageTypeEnum.OK) {
-                    TransactionResponse result = response.getTransactionResponse();
-                    if (result.getMessages() != null) {
-                        session.setAttribute("flashMessageSuccess", "Your order has been processed.");
-
+                int newOrderId = OrderDAO.addOrder(shippingInfo, email, cart.toString());
+                if(newOrderId > 0) {
+                    // The order was added
+                    Double amount = cart.getTotalPrice();
+                    String response = ChargeCreditCard.run(amount, ccInfo, billingInfo, shippingInfo, email, sameAddress);
+                    // Parse the response to determine results
+                    if (response.contains("Success")) {
                         session.removeAttribute("cart");
+                        session.setAttribute("newOrderId", newOrderId);
+                        session.setAttribute("flashMessageSuccess", response);
+                        resp.sendRedirect(resp.encodeRedirectURL(req.getContextPath() + "/order-confirmation"));
+                        return;
                     } else {
-                        session.setAttribute("flashMessageError", "Something went wrong");
+                        session.setAttribute("flashMessageDanger", response);
                     }
                 } else {
-                    session.setAttribute("flashMessageError", "Something went wrong");
+                    // Order failed in database
+                    session.setAttribute("flashMessageDanger", "Your order could not be processed.");
                 }
             } else {
                 // Cart doesn't exist
@@ -89,6 +94,7 @@ public class Checkout extends HttpServlet {
         } else {
             // Validation errors
         }
+
         req.setAttribute("pageTitle", "Checkout");
         req.getRequestDispatcher("WEB-INF/checkout.jsp").forward(req, resp);
     }

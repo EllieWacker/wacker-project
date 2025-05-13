@@ -39,7 +39,7 @@
                             <td>${fn:escapeXml(user.firstName)}</td>
                             <td>${fn:escapeXml(user.lastName)}</td>
                             <td>${fn:escapeXml(user.email)}</td>
-                            <td>${fn:escapeXml(user.phone)}</td>
+                            <td><cfmt:formatPhone value="${user.phone}" /></td>
                             <td>${fn:escapeXml(user.language)}</td>
                             <td>${fn:escapeXml(user.status)}</td>
                             <td>${fn:escapeXml(user.privileges)}</td>

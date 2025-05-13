@@ -30,17 +30,23 @@
                             <small>${puppy.adopted ? 'Adopted' : 'Available'}</small><br />
                             <p class="badge rounded-pill text-bg-secondary"><a class="text-white" href="${appURL}/view-puppies?breedFilter=${puppy.breedID}">${puppy.breedID}</a></p><br />
 
-
-                            <c:if test="${!puppy.adopted}">
-                                <div slot="footer">
-                                    <form method="POST" action="${appURL}/adopt" class="w-75">
-                                        <input type="hidden" name="puppyID" value="${puppy.puppyID}">
-                                        <div class="input-group">
-                                            <button type="submit" class="btn btn-outline-primary">Adopt</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </c:if>
+                            <c:choose>
+<%--                                <c:when test="${sessionScope.cart.contents.containsKey(puppy)}">--%>
+<%--                                    <button disabled class="btn btn-outline-primary btn-sm">In Cart</button>--%>
+<%--                                </c:when>--%>
+                            </c:choose>
+                            <c:otherwise>
+                                <c:if test="${!puppy.adopted}">
+                                    <div slot="footer">
+                                        <form method="POST" action="${appURL}/adopt" class="w-75">
+                                            <input type="hidden" name="puppyID" value="${puppy.puppyID}">
+                                            <div class="input-group">
+                                                <button type="submit" class="btn btn-outline-primary">Adopt</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </c:if>
+                            </c:otherwise>
                         </sl-card>
                     </div>
                 </c:forEach>
